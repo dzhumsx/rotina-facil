@@ -3,11 +3,11 @@
 // ===========================
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Testar nova rota GET /api/message
-    fetch("https://rotina-facil-production.up.railway.app/api/message")
+    // Esse fetch vai bater na API (callmanager) e ela vai rodar a função testServer()
+    fetch("https://rotinafacil-api-manager.up.railway.app/api/test-server")
         .then(res => res.text())
-        .then(data => console.log("Resposta do servidor (/api/message):", data))
-        .catch(err => console.error("Erro ao conectar na API:", err));
+        .then(data => console.log("Resultado de testServer():", data))
+        .catch(err => console.error("Erro ao conectar na API Manager:", err));
 
     initCalendar();
     initViewToggle();
