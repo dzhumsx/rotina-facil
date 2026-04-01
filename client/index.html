@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Rotina Fácil - Organize sua rotina de estudos com inteligência artificial">
+    <title>Rotina Fácil - Organize sua Rotina</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <!-- Top Bar -->
+    <header class="topbar" id="topbar">
+        <div class="topbar-left">
+            <span class="material-icons-round topbar-icon">search</span>
+            <input type="text" class="topbar-search" id="topbar-search" placeholder="Buscar...">
+        </div>
+        <button class="topbar-add-btn" id="topbar-add-btn">
+            <span class="material-icons-round">add</span>
+        </button>
+        <div class="topbar-right">
+            <button class="topbar-ai-btn hidden" id="topbar-ai-btn" title="Abrir Assistente de Rotina">
+                <span class="material-icons-round">smart_toy</span>
+            </button>
+            <div class="topbar-avatar" id="topbar-avatar">L</div>
+            <button class="topbar-icon-btn" id="btn-text-mode">
+                <span class="material-icons-round">text_fields</span>
+            </button>
+            <button class="topbar-icon-btn" id="btn-menu">
+                <span class="material-icons-round">menu</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Layout -->
+    <main class="app-layout" id="app-layout">
+
+        <!-- Left Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <!-- Calendar Header -->
+            <div class="sidebar-header">
+                <button class="calendar-dropdown-btn" id="calendar-dropdown-btn">
+                    <span>Calendário</span>
+                    <span class="material-icons-round">expand_more</span>
+                </button>
+            </div>
+
+            <!-- View Toggle -->
+            <div class="view-toggle" id="view-toggle">
+                <button class="view-toggle-btn active" data-view="month">Mês</button>
+                <button class="view-toggle-btn" data-view="week">Semana</button>
+            </div>
+
+            <!-- Calendar Navigation -->
+            <div class="calendar-nav" id="calendar-nav">
+                <button class="calendar-nav-btn" id="calendar-prev">
+                    <span class="material-icons-round">chevron_left</span>
+                </button>
+                <span class="calendar-nav-title" id="calendar-nav-title">Terça-feira, 23 de abril</span>
+                <button class="calendar-nav-btn" id="calendar-next">
+                    <span class="material-icons-round">chevron_right</span>
+                </button>
+            </div>
+
+            <!-- Calendar Grid -->
+            <div class="calendar-grid" id="calendar-grid">
+                <div class="calendar-weekdays">
+                    <span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span>
+                </div>
+                <div class="calendar-days" id="calendar-days">
+                    <!-- Filled by JS -->
+                </div>
+            </div>
+
+            <!-- New Routine Button -->
+            <button class="new-routine-btn" id="new-routine-btn">
+                <span class="material-icons-round">add</span>
+                Nova Rotina
+            </button>
+
+            <!-- Selected Date Label -->
+            <div class="selected-date-label" id="selected-date-label">
+                Terça-feira, 23 de abril
+            </div>
+
+            <!-- Quick Day Links -->
+            <div class="quick-days" id="quick-days">
+                <div class="quick-day-item">
+                    <span class="quick-day-name">Hoje</span>
+                    <span class="quick-day-date">23</span>
+                </div>
+                <div class="quick-day-item">
+                    <span class="quick-day-name">Amanhã</span>
+                    <span class="quick-day-date">24</span>
+                </div>
+                <div class="quick-day-item">
+                    <span class="quick-day-name">Quinta</span>
+                    <span class="quick-day-date">25</span>
+                </div>
+                <div class="quick-day-item">
+                    <span class="quick-day-name">Sexta</span>
+                    <span class="quick-day-date">26</span>
+                </div>
+            </div>
+
+            <!-- Add Day -->
+            <button class="add-day-btn" id="add-day-btn">
+                <span class="material-icons-round">add</span>
+                Adicionar Dia
+            </button>
+
+            <!-- Settings -->
+            <button class="settings-btn" id="settings-btn">
+                <span class="material-icons-round">settings</span>
+                <span>Configurações</span>
+                <span class="material-icons-round settings-arrow">chevron_right</span>
+            </button>
+        </aside>
+
+        <!-- Center Panel -->
+        <section class="main-panel" id="main-panel">
+            <!-- Panel Header -->
+            <div class="panel-header">
+                <h1 class="panel-title" id="panel-title">Terça-feira, 23 de abril</h1>
+                <div class="panel-header-actions">
+                    <button class="panel-header-btn" id="btn-calendar-view">
+                        <span class="material-icons-round">calendar_today</span>
+                    </button>
+                    <button class="panel-header-btn" id="btn-list-view">
+                        <span class="material-icons-round">format_list_bulleted</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Three Task Containers -->
+            <div class="tasks-columns" id="tasks-columns">
+
+                <!-- Container: Em andamento -->
+                <div class="task-container container-in-progress" id="container-in-progress">
+                    <div class="container-header">
+                        <span class="material-icons-round container-icon">pending</span>
+                        <h3 class="container-title">Em andamento</h3>
+                        <span class="container-count">2</span>
+                    </div>
+                    <div class="container-tasks">
+                        <div class="task-card" id="task-2" data-status="in-progress">
+                            <div class="task-icon task-icon-blue">
+                                <span class="material-icons-round">play_circle</span>
+                            </div>
+                            <div class="task-content">
+                                <h3 class="task-title">Assistir aula de História</h3>
+                                <div class="task-meta">
+                                    <span class="task-time">11:00 - 12:00</span>
+                                    <span class="task-separator">▸</span>
+                                </div>
+                            </div>
+                            <button class="task-arrow">
+                                <span class="material-icons-round">chevron_right</span>
+                            </button>
+                        </div>
+
+                        <div class="task-card" id="task-3" data-status="in-progress">
+                            <div class="task-icon task-icon-orange">
+                                <span class="material-icons-round">description</span>
+                            </div>
+                            <div class="task-content">
+                                <h3 class="task-title">Participar de projeto de pesquisa</h3>
+                                <div class="task-meta">
+                                    <span class="task-time">15:30 - 17:00</span>
+                                    <span class="task-separator">▸</span>
+                                    <span class="task-tag tag-yellow"></span>
+                                    <span class="task-tag-icon"><span class="material-icons-round">folder</span></span>
+                                    <span class="task-tag-icon"><span class="material-icons-round">auto_stories</span></span>
+                                </div>
+                            </div>
+                            <button class="task-arrow">
+                                <span class="material-icons-round">chevron_right</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Container: Concluídas -->
+                <div class="task-container container-completed" id="container-completed">
+                    <div class="container-header">
+                        <span class="material-icons-round container-icon">check_circle</span>
+                        <h3 class="container-title">Concluídas</h3>
+                        <span class="container-count">1</span>
+                    </div>
+                    <div class="container-tasks">
+                        <div class="task-card" id="task-1" data-status="completed">
+                            <div class="task-icon task-icon-green">
+                                <span class="material-icons-round">check_circle</span>
+                            </div>
+                            <div class="task-content">
+                                <h3 class="task-title">Estudar Matemática</h3>
+                                <div class="task-meta">
+                                    <span class="task-time">8:00 - 10:00</span>
+                                    <span class="task-separator">▸</span>
+                                    <span class="task-tag tag-blue"></span>
+                                    <span class="task-tag tag-green"></span>
+                                </div>
+                            </div>
+                            <button class="task-arrow">
+                                <span class="material-icons-round">chevron_right</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Container: Finalizadas -->
+                <div class="task-container container-finished" id="container-finished">
+                    <div class="container-header">
+                        <span class="material-icons-round container-icon">done_all</span>
+                        <h3 class="container-title">Finalizadas</h3>
+                        <span class="container-count">2</span>
+                    </div>
+                    <div class="container-tasks">
+                        <div class="task-card" id="task-4" data-status="finished">
+                            <div class="task-icon task-icon-teal">
+                                <span class="material-icons-round">edit_note</span>
+                            </div>
+                            <div class="task-content">
+                                <h3 class="task-title">Escrever parte do TCC</h3>
+                                <div class="task-meta">
+                                    <span class="task-time">16:00 - 18:00</span>
+                                    <span class="task-separator">▸</span>
+                                    <span class="task-tag-icon"><span class="material-icons-round">draw</span></span>
+                                </div>
+                            </div>
+                            <button class="task-arrow">
+                                <span class="material-icons-round">chevron_right</span>
+                            </button>
+                        </div>
+
+                        <div class="task-card" id="task-5" data-status="finished">
+                            <div class="task-icon task-icon-cyan">
+                                <span class="material-icons-round">fitness_center</span>
+                            </div>
+                            <div class="task-content">
+                                <h3 class="task-title">Academia com atlética</h3>
+                                <div class="task-meta">
+                                    <span class="task-time">19:00 - 20:00</span>
+                                    <span class="task-separator">▸</span>
+                                    <span class="task-tag tag-green"></span>
+                                    <span class="task-tag tag-blue-dark"></span>
+                                    <span class="task-tag-icon"><span class="material-icons-round">list</span></span>
+                                </div>
+                            </div>
+                            <button class="task-arrow">
+                                <span class="material-icons-round">chevron_right</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- Add Task Button -->
+            <button class="add-task-btn" id="add-task-btn">
+                <span class="material-icons-round">add</span>
+                Adicionar Tarefa
+            </button>
+
+            <!-- Saved Routines -->
+            <div class="saved-routines" id="saved-routines">
+                <div class="saved-routines-inner">
+                    <span class="material-icons-round saved-routines-icon">edit</span>
+                    <span class="saved-routines-text">Rotinas à enteradas</span>
+                </div>
+                <button class="task-arrow">
+                    <span class="material-icons-round">chevron_right</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Right Panel - AI Assistant -->
+        <aside class="assistant-panel" id="assistant-panel">
+            <!-- Assistant Header -->
+            <div class="assistant-header">
+                <div class="assistant-header-left">
+                    <span class="material-icons-round assistant-gear">settings</span>
+                    <h2>Assistente de Rotina</h2>
+                </div>
+                <button class="assistant-close-btn" id="assistant-close-btn">
+                    <span class="material-icons-round">close</span>
+                </button>
+            </div>
+
+            <!-- Chat Area -->
+            <div class="assistant-chat" id="assistant-chat">
+                <!-- Assistant Message -->
+                <div class="chat-message assistant-message">
+                    <div class="assistant-avatar-wrapper">
+                        <img src="assistant-avatar.png" alt="Assistente" class="assistant-avatar" id="assistant-avatar">
+                    </div>
+                    <div class="chat-bubble">
+                        Olá! Como posso ajudar a planejar sua rotina?
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Input -->
+            <div class="chat-input-wrapper" id="chat-input-wrapper">
+                <input type="text" class="chat-input" id="chat-input"
+                    placeholder="Digite dificuldades ou necessidades....">
+                <button class="chat-send-btn" id="chat-send-btn">
+                    <span class="material-icons-round">send</span>
+                </button>
+            </div>
+
+            <!-- Suggestions -->
+            <div class="chat-suggestions" id="chat-suggestions">
+                <button class="suggestion-btn" id="suggestion-1">
+                    <span class="material-icons-round suggestion-icon">schedule</span>
+                    <span>Gerenciar tempo de estudo</span>
+                    <span class="material-icons-round suggestion-arrow">chevron_right</span>
+                </button>
+                <button class="suggestion-btn" id="suggestion-2">
+                    <span class="material-icons-round suggestion-icon">balance</span>
+                    <span>Equilibrar estudos e lazer</span>
+                    <span class="material-icons-round suggestion-arrow">chevron_right</span>
+                </button>
+                <button class="suggestion-btn" id="suggestion-3">
+                    <span class="material-icons-round suggestion-icon">edit_document</span>
+                    <span>Planejar redação do TCC</span>
+                    <span class="material-icons-round suggestion-arrow">chevron_right</span>
+                </button>
+            </div>
+        </aside>
+
+    </main>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
