@@ -9,15 +9,16 @@ app.use(express.json());
 
 // Health check
 app.get("/", (req, res) => {
-  res.json({ status: "ok", message: "Rotina Fácil API is running" });
+    res.json({ status: "ok", message: "Rotina Fácil API is running" });
+    console.log("System ok")
 });
 
 // Webhook endpoint
 app.post("/webhook", (req, res) => {
-  console.log("Webhook received:", req.body);
-  res.json({ message: "Webhook recebido com sucesso!" });
+    console.log("Webhook received:", req.body);
+    res.json({ message: "Webhook recebido com sucesso!" });
 });
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 });
