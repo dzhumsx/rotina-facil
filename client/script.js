@@ -3,12 +3,6 @@
 // ===========================
 
 document.addEventListener('DOMContentLoaded', () => {
-    initCalendar();
-    initViewToggle();
-    initTaskInteractions();
-    initChatAssistant();
-    initSidebarInteractions();
-
     //Testar conexão com o servidor
     fetch("https://rotina-facil-production.up.railway.app:8080/webhook", {
         method: "POST",
@@ -18,6 +12,20 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(res => res.json())
         .then(data => console.log("Resposta do webhook:", data))
         .catch(err => console.error("Erro ao conectar:", err));
+
+    // Testar nova rota GET /api/message
+    fetch("https://rotina-facil-production.up.railway.app:8080/api/message")
+        .then(res => res.text())
+        .then(data => console.log("Resposta do servidor (/api/message):", data))
+        .catch(err => console.error("Erro ao conectar na API:", err));
+
+    initCalendar();
+    initViewToggle();
+    initTaskInteractions();
+    initChatAssistant();
+    initSidebarInteractions();
+
+
 
 });
 

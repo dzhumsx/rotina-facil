@@ -19,6 +19,15 @@ app.post("/webhook", (req, res) => {
     res.json({ message: "Webhook recebido com sucesso!" });
 });
 
+app.get("/api/message", async (req, res) => {
+    try {
+        // Função assíncrona que retorna uma string para o cliente
+        res.send("Mensagem do servidor (Railway)!");
+    } catch (error) {
+        res.status(500).send("Erro no servidor");
+    }
+});
+
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
