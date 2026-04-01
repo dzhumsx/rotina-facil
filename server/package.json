@@ -1,7 +1,7 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "Rotina Fácil API",
+  "description": "Rotina Fácil SERVER",
   "main": "node.js",
   "scripts": {
     "start": "node node.js",

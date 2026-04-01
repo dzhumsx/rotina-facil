@@ -3,18 +3,8 @@
 // ===========================
 
 document.addEventListener('DOMContentLoaded', () => {
-    //Testar conexão com o servidor
-    fetch("https://rotina-facil-production.up.railway.app:8080/webhook", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ teste: "olá do client!" })
-    })
-        .then(res => res.json())
-        .then(data => console.log("Resposta do webhook:", data))
-        .catch(err => console.error("Erro ao conectar:", err));
-
     // Testar nova rota GET /api/message
-    fetch("https://rotina-facil-production.up.railway.app:8080/api/message")
+    fetch("https://rotina-facil-production.up.railway.app/api/message")
         .then(res => res.text())
         .then(data => console.log("Resposta do servidor (/api/message):", data))
         .catch(err => console.error("Erro ao conectar na API:", err));
