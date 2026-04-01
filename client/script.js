@@ -8,6 +8,17 @@ document.addEventListener('DOMContentLoaded', () => {
     initTaskInteractions();
     initChatAssistant();
     initSidebarInteractions();
+
+    //Testar conexão com o servidor
+    fetch("https://rotina-facil-production.up.railway.app:8080/webhook", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ teste: "olá do client!" })
+    })
+        .then(res => res.json())
+        .then(data => console.log("Resposta do webhook:", data))
+        .catch(err => console.error("Erro ao conectar:", err));
+
 });
 
 // ===========================
