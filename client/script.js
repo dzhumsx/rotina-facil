@@ -2,8 +2,13 @@
 // Rotina Fácil - Main Script
 // ===========================
 
+const URL = "http://localhost:3000";
+
 const user = 'admin';
 const password = 'senha';
+const id = 2;
+const KEY = btoa(123);
+let VerificationToken = "";
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -22,13 +27,23 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(err => console.error("Erro ao conectar na API:", err));
     */
 
-    fetch("http://localhost:3000/api/user/2", {
+    //Get Authentication Token
+    fetch(URL + "/api/getToken", {
+        method: 'POST',
         headers: {
-            'authorization': btoa(user + ':' + password)
-        }
+            'authorization': KEY,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            user: user,
+            password: password
+        })
     })
         .then(res => res.text())
-        .then(data => console.log("Resultado de getUser():", data))
+        .then(tokenData => {
+            VerificationToken = tokenData; // <- Armazena o token para outras chamadas!
+            console.log("Resultado de getToken(): Token guardado localmente!");
+        })
         .catch(err => console.error("Erro ao conectar na API:", err));
 
     initCalendar();
@@ -37,9 +52,35 @@ document.addEventListener('DOMContentLoaded', () => {
     initChatAssistant();
     initSidebarInteractions();
 
-
+    // Link API Test Button to Textarea
+    const btnFetchUser = document.getElementById('btn-fetch-user');
+    const userDataResult = document.getElementById('user-data-result');
+    if (btnFetchUser && userDataResult) {
+        btnFetchUser.addEventListener('click', async () => {
+            userDataResult.value = "Carregando dados do servidor...";
+            const resultData = await getUserData(id);
+            userDataResult.value = resultData;
+        });
+    }
 
 });
+
+async function getUserData(userId) {
+    try {
+        const res = await fetch(URL + "/api/user/" + userId, {
+            headers: {
+                // Seu token de verificação injetado
+                'authorization': btoa(VerificationToken + ':' + KEY)
+            }
+        });
+        const data = await res.text();
+        console.log("Resultado de getUser():", data);
+        return data; // Retorna o texto formatado para o input
+    } catch (err) {
+        console.error("Erro ao conectar na API:", err);
+        return "Falha na conexão: " + err.message;
+    }
+}
 
 // ===========================
 // CALENDAR
