@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const db = require('./data/db');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -11,11 +12,6 @@ app.use(express.json());
 app.get("/", (req, res) => {
     res.json({ status: "ok", message: "Rotina Fácil Server is running" });
     console.log("System ok");
-    const db = require('./data/db');
-
-    db.initDb();
-
-
 });
 
 app.get("/api/message", async (req, res) => {
@@ -47,7 +43,6 @@ app.get("/api/user/:id", async (req, res) => {
 
 async function getUser(userId) {
     try {
-        const db = require('./data/db');
         const result = await db.query('SELECT * FROM users WHERE id = $1', [userId]);
         return result.rows[0] || "Usuário não encontrado";
     } catch (err) {
@@ -55,6 +50,9 @@ async function getUser(userId) {
         return "Falhou o getUser: " + err.message;
     }
 }
+
+// Chama a inicialização de tabelas e usuários do banco ao iniciar a aplicação
+db.initDb();
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);

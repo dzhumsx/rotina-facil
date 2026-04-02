@@ -2,11 +2,11 @@ const { Pool } = require('pg');
 
 // Configure connection details
 const pool = new Pool({
-    user: 'teste',
-    host: 'localhost',
-    database: 'rotinafacil',
-    password: '123',
-    port: 5432, // Default PostgreSQL port
+    // Utilizamos a string inteira de conexão porque a Railway providencia uma proxy externa específica:
+    connectionString: process.env.DATABASE_URL || "postgresql://postgres:KHEzdhRehpVOJwpkRVaMfMWxQAXNSQfU@interchange.proxy.rlwy.net:22330/railway",
+    
+    // Configuração de SSL para poder se conectar de modo externo se necessário
+    ssl: process.env.NODE_ENV === "production" ? false : { rejectUnauthorized: false }
 });
 
 // Inicialização automática do banco e criação dos usuários

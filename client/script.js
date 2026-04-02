@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Esse fetch vai bater na API (callmanager) e ela vai rodar a função testServer()
     //fetch("https://rotinafacil-api-manager.up.railway.app/api/test-server")
+    /*
     fetch("http://localhost:3000/api/message")
         .then(res => res.text())
         .then(data => console.log("Resultado de testServer():", data))
@@ -16,8 +17,9 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(res => res.text())
         .then(data => console.log("Resultado de testDatabase():", data))
         .catch(err => console.error("Erro ao conectar na API:", err));
+    */
 
-    fetch("http://localhost:3000/api/user/1")
+    fetch("http://localhost:3000/api/user/2")
         .then(res => res.text())
         .then(data => console.log("Resultado de getUser():", data))
         .catch(err => console.error("Erro ao conectar na API:", err));
