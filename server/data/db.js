@@ -4,7 +4,7 @@ const { Pool } = require('pg');
 const pool = new Pool({
     // Utilizamos a string inteira de conexão porque a Railway providencia uma proxy externa específica:
     connectionString: process.env.DATABASE_URL || "postgresql://postgres:KHEzdhRehpVOJwpkRVaMfMWxQAXNSQfU@interchange.proxy.rlwy.net:22330/railway",
-    
+
     // Configuração de SSL para poder se conectar de modo externo se necessário
     ssl: process.env.NODE_ENV === "production" ? false : { rejectUnauthorized: false }
 });
@@ -33,7 +33,6 @@ const initDb = async () => {
                 console.log(`Usuário ${i} inserido no banco de dados!`);
             }
         }
-        console.log("Tabela e usuários padrão verificados com sucesso.");
     } catch (err) {
         console.error("Erro ao inicializar o banco de dados:", err.message);
     }

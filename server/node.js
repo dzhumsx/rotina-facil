@@ -1,6 +1,8 @@
+require('dotenv').config();
 const express = require("express");
 const cors = require("cors");
 const db = require('./data/db');
+const credentials = btoa(process.env.USER + ':' + process.env.PASSWORD);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -8,10 +10,27 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
+const requireAuth = (req, res, next) => {
+    // Access the header using req.headers
+    const authHeader = req.headers['authorization'];
+
+    // Basic check: Does the header exist?
+    if (!authHeader) {
+        return res.status(401).json({ error: 'Authorization header is missing' });
+    }
+
+    // Example: Verify a simple static Bearer token
+    if (authHeader !== credentials) {
+        return res.status(403).json({ error: 'Invalid token, recieved: ' + authHeader + ';expected: ' + credentials });
+    }
+
+    // If valid, proceed to the next function
+    next();
+};
+
 // Health check
 app.get("/", (req, res) => {
     res.json({ status: "ok", message: "Rotina Fácil Server is running" });
-    console.log("System ok");
 });
 
 app.get("/api/message", async (req, res) => {
@@ -32,7 +51,7 @@ app.get("/api/database", async (req, res) => {
 });
 
 // Create a new route to get a user by ID
-app.get("/api/user/:id", async (req, res) => {
+app.get("/api/user/:id", requireAuth, async (req, res) => {
     try {
         const result = await getUser(req.params.id);
         res.send(result);

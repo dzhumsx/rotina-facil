@@ -2,6 +2,9 @@
 // Rotina Fácil - Main Script
 // ===========================
 
+const user = 'admin';
+const password = 'senha';
+
 document.addEventListener('DOMContentLoaded', () => {
 
     // Esse fetch vai bater na API (callmanager) e ela vai rodar a função testServer()
@@ -19,7 +22,11 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(err => console.error("Erro ao conectar na API:", err));
     */
 
-    fetch("http://localhost:3000/api/user/2")
+    fetch("http://localhost:3000/api/user/2", {
+        headers: {
+            'authorization': btoa(user + ':' + password)
+        }
+    })
         .then(res => res.text())
         .then(data => console.log("Resultado de getUser():", data))
         .catch(err => console.error("Erro ao conectar na API:", err));
