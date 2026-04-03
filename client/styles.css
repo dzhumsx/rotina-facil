@@ -201,7 +201,9 @@ body::before {
 }
 
 @keyframes pulse-ai {
-    0%, 100% {
+
+    0%,
+    100% {
         box-shadow: 0 3px 12px rgba(33, 150, 227, 0.35);
     }
 
@@ -776,8 +778,9 @@ body::before {
 /* Container Tasks */
 .container-tasks {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 8px;
+    overflow: scroll;
 }
 
 

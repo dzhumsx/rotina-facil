@@ -28,7 +28,10 @@
             <button class="topbar-ai-btn hidden" id="topbar-ai-btn" title="Abrir Assistente de Rotina">
                 <span class="material-icons-round">smart_toy</span>
             </button>
-            <div class="topbar-avatar" id="topbar-avatar">L</div>
+            <div>
+                <p id="userNameDisplay">Usuário</p>
+            </div>
+            <div class="topbar-avatar" id="topbar-avatar">🙍</div>
             <button class="topbar-icon-btn" id="btn-text-mode">
                 <span class="material-icons-round">text_fields</span>
             </button>
@@ -265,12 +268,15 @@
 
 
             <!-- User Data Test -->
-            <div style="margin: 20px 0; padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background-color: rgba(255,255,255,0.02);">
+            <div
+                style="margin: 20px 0; padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background-color: rgba(255,255,255,0.02);">
                 <button id="btn-fetch-user" class="add-task-btn" style="width: auto; margin-bottom: 10px;">
                     <span class="material-icons-round">cloud_download</span>
                     Buscar Dados do Usuário
                 </button>
-                <textarea id="user-data-result" style="width: 100%; height: 80px; padding: 10px; border-radius: 8px; color: #e0e0e0; background: #000; border: 1px solid rgba(255,255,255,0.1); font-family: monospace; resize: none;" readonly placeholder="O resultado do banco de dados aparecerá aqui..."></textarea>
+                <textarea id="user-data-result"
+                    style="width: 100%; height: 80px; padding: 10px; border-radius: 8px; color: #e0e0e0; background: #000; border: 1px solid rgba(255,255,255,0.1); font-family: monospace; resize: none;"
+                    readonly placeholder="O resultado do banco de dados aparecerá aqui..."></textarea>
             </div>
 
             <!-- Add Task Button -->

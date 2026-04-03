@@ -7,44 +7,27 @@ const URL = "http://localhost:3000";
 const user = 'admin';
 const password = 'senha';
 const id = 2;
-const KEY = btoa(123);
-let VerificationToken = "";
+const KEY = 321;
+const VerificationToken = localStorage.getItem("VerificationToken");
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    //Inicial JWT check & Reassign userName
+    try {
+        const res = await fetch(URL + "/api/checkToken", {
+            headers: {
+                'authorization': VerificationToken
+            }
+        });
+        const userName = await res.text();
+        console.log("Resultado de checkToken():", userName);
 
-    // Esse fetch vai bater na API (callmanager) e ela vai rodar a função testServer()
-    //fetch("https://rotinafacil-api-manager.up.railway.app/api/test-server")
-    /*
-    fetch("http://localhost:3000/api/message")
-        .then(res => res.text())
-        .then(data => console.log("Resultado de testServer():", data))
-        .catch(err => console.error("Erro ao conectar na API Manager:", err));
-
-    //fetch("https://rotinafacil-api-manager.up.railway.app/api/database")
-    fetch("http://localhost:3000/api/database")
-        .then(res => res.text())
-        .then(data => console.log("Resultado de testDatabase():", data))
-        .catch(err => console.error("Erro ao conectar na API:", err));
-    */
-
-    //Get Authentication Token
-    fetch(URL + "/api/getToken", {
-        method: 'POST',
-        headers: {
-            'authorization': KEY,
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            user: user,
-            password: password
-        })
-    })
-        .then(res => res.text())
-        .then(tokenData => {
-            VerificationToken = tokenData; // <- Armazena o token para outras chamadas!
-            console.log("Resultado de getToken(): Token guardado localmente!");
-        })
-        .catch(err => console.error("Erro ao conectar na API:", err));
+        const userNameDisplay = document.getElementById('userNameDisplay');
+        if (userNameDisplay) {
+            userNameDisplay.textContent = userName;
+        }
+    } catch (err) {
+        console.error("Erro ao conectar na API:", err);
+    }
 
     initCalendar();
     initViewToggle();
@@ -62,6 +45,14 @@ document.addEventListener('DOMContentLoaded', () => {
             userDataResult.value = resultData;
         });
     }
+    const btnCheckToken = document.getElementById('btn-check-token');
+    if (btnCheckToken && userDataResult) {
+        btnCheckToken.addEventListener('click', async () => {
+            userDataResult.value = "Carregando dados do servidor...";
+            const resultData = await checkTokenValid();
+            userDataResult.value = resultData;
+        });
+    }
 
 });
 
@@ -70,7 +61,7 @@ async function getUserData(userId) {
         const res = await fetch(URL + "/api/user/" + userId, {
             headers: {
                 // Seu token de verificação injetado
-                'authorization': btoa(VerificationToken + ':' + KEY)
+                'authorization': VerificationToken
             }
         });
         const data = await res.text();

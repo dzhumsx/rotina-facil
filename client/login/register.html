@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - Rotina Fácil</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+
+<body>
+
+    <script src="register.js"></script>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <h2>Rotina Fácil</h2>
+                <p>Crie sua conta para começar a se organizar.</p>
+            </div>
+
+            <form class="login-form" id="register-form">
+                <div class="input-group">
+                    <label for="name">Nome completo</label>
+                    <div class="input-icon">
+                        <i class='bx bx-user'></i>
+                        <input type="text" id="name" placeholder="Seu nome" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="email">E-mail</label>
+                    <div class="input-icon">
+                        <i class='bx bx-envelope'></i>
+                        <input type="email" id="email" placeholder="seu@email.com" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Senha</label>
+                    <div class="input-icon">
+                        <i class='bx bx-lock-alt'></i>
+                        <input type="password" id="password" placeholder="Sua senha" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-login">Criar minha conta</button>
+            </form>
+
+            <div class="login-footer">
+                <p>Já tem uma conta? <a href="index.html">Faça login</a></p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
