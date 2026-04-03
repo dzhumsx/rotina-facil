@@ -62,10 +62,15 @@ app.post("/api/getToken", async (req, res) => {
         return res.status(401).json({ error: 'Invalid user or password' });
     }
 
+    const userId = await getUserId(req.body.user);
+    if (userId == false) {
+        return res.status(401).json({ error: 'Invalid user or password' });
+    }
+
     // Salva o token fornecido pelo cliente para uso pelo middleware de autentição requireAuth
     const { user, password } = req.body;
 
-    VerificationToken = await generateJWT(userName, user, password);
+    VerificationToken = await generateJWT(userId, userName, user, password);
     res.status(200).send(VerificationToken); // Retorna o JWT real para a web!
     console.log("Token JWT gerado e registrado: " + VerificationToken);
 });
@@ -84,10 +89,23 @@ async function validateUser(user, password) {
     }
 }
 
+async function getUserId(user) {
+    try {
+        const result = await db.query('SELECT id FROM auth WHERE email = $1', [user]);
+        if (result.rows[0]) {
+            return result.rows[0].id;
+        } else {
+            return false;
+        }
+    } catch {
+        return false;
+    }
+}
+
 //Gera o Token
-async function generateJWT(userName, user, password) {
+async function generateJWT(userId, userName, user, password) {
     token = jwt.sign(
-        { userName: userName, user: user, password: password },
+        { userId: userId, userName: userName, user: user, password: password },
         KEY,
         { algorithm: 'HS512', expiresIn: '1h' }
     );
@@ -156,6 +174,32 @@ async function checkToken() {
         return "Falhou o checkToken: " + err.message;
     }
 }
+
+//Query tasks from user
+app.post("/api/queryTask", requireAuth, async (req, res) => {
+    try {
+        const token = req.body.jwt;
+        const userId = jwt.verify(token, KEY).userId;
+        console.log("User ID: " + userId);
+        const result = await queryTasks(userId);
+        res.status(200).send(result);
+    } catch (err) {
+        console.error("Erro ao conectar na API de task:", err.message);
+        res.status(500).send("Falhou o queryTask: " + err.message);
+    }
+});
+
+async function queryTasks(userId) {
+    try {
+        const result = await db.query('SELECT * FROM tasks WHERE userId = $1', [userId]);
+        return result.rows || "Nenhuma tarefa encontrada";
+    } catch (err) {
+        console.error("Erro ao conectar na API:", err.message);
+        return "Falhou o queryTasks: " + err.message;
+    }
+}
+
+
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);

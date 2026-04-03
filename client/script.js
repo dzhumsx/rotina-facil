@@ -3,12 +3,9 @@
 // ===========================
 
 const URL = "http://localhost:3000";
-
-const user = 'admin';
-const password = 'senha';
-const id = 2;
 const KEY = 321;
 const VerificationToken = localStorage.getItem("VerificationToken");
+let StoredTasks = [];
 
 document.addEventListener('DOMContentLoaded', async () => {
     //Inicial JWT check & Reassign userName
@@ -27,6 +24,36 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     } catch (err) {
         console.error("Erro ao conectar na API:", err);
+    }
+
+    //Fetch tasks
+    try {
+        const res = await fetch(URL + "/api/queryTask", {
+            method: 'POST',
+            headers: {
+                'authorization': VerificationToken,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                jwt: VerificationToken
+            })
+        });
+        const tasks = await res.text();
+        console.log("Resultado de queryTask():", tasks); //TEST LOG PORPUSE
+        
+        try {
+            StoredTasks = JSON.parse(tasks);
+        } catch (e) {
+            console.log("Failed to parse tasks JSON or no tasks found.");
+            StoredTasks = [];
+        }
+
+    } catch (err) {
+        console.error("Erro ao conectar na API:", err);
+    }
+
+    if (Array.isArray(StoredTasks)) {
+        loadTasks(StoredTasks);
     }
 
     initCalendar();
@@ -150,6 +177,34 @@ function renderCalendar() {
         const btn = createDayButton(i, true);
         calendarDays.appendChild(btn);
     }
+}
+
+function loadTasks(tasks) {
+    const taskContainer = document.querySelector('.container-tasks');
+    if (!taskContainer) return;
+    
+    // Clear current loading or default tasks
+    taskContainer.innerHTML = '';
+    
+    tasks.forEach(task => {
+        const taskHTML = `
+            <div class="task-card" id="task_${task.id || Math.random().toString(36).substring(2)}" data-status="in-progress">
+                <div class="task-icon task-icon-blue">
+                    <span class="material-icons-round">play_circle</span>
+                </div>
+                <div class="task-content">
+                    <h3 class="task-title">${task.title || task.nome || 'Sem título'}</h3>
+                    <div class="task-meta">
+                        <span class="task-description">${task.description || task.descricao || 'Sem descrição'}</span>
+                    </div>
+                </div>
+                <button class="task-arrow">
+                    <span class="material-icons-round">chevron_right</span>
+                </button>
+            </div>
+        `;
+        taskContainer.insertAdjacentHTML('beforeend', taskHTML);
+    });
 }
 
 function createDayButton(day, isOtherMonth, isToday = false) {
