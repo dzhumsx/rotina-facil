@@ -38,6 +38,9 @@
             <button class="topbar-icon-btn" id="btn-menu">
                 <span class="material-icons-round">menu</span>
             </button>
+            <button class="topbar-icon-btn" id="btn-logout">
+                <span class="material-icons-round">logout</span>
+            </button>
         </div>
     </header>
 
@@ -144,92 +147,41 @@
             <!-- Three Task Containers -->
             <div class="tasks-columns" id="tasks-columns">
 
+                <!-- Container: Pendente -->
+                <div class="task-container container-in-progress" id="container-in-progress">
+                    <div class="container-header">
+                        <span class="material-icons-round container-icon">pending</span>
+                        <h3 class="container-title">Pendente</h3>
+                        <span class="container-count">0</span>
+                    </div>
+                    <div class="container-tasks" id="pending">
+
+                    </div>
+                </div>
+
                 <!-- Container: Em andamento -->
                 <div class="task-container container-in-progress" id="container-in-progress">
                     <div class="container-header">
                         <span class="material-icons-round container-icon">pending</span>
                         <h3 class="container-title">Em andamento</h3>
-                        <span class="container-count">2</span>
+                        <span class="container-count">0</span>
                     </div>
-                    <div class="container-tasks">
+                    <div class="container-tasks" id="doing">
 
                     </div>
                 </div>
 
-                <!-- Container: Concluídas -->
-                <!-- <div class="task-container container-completed" id="container-completed">
+                <!-- Container: Concluida -->
+                <div class="task-container container-in-progress" id="container-in-progress">
                     <div class="container-header">
-                        <span class="material-icons-round container-icon">check_circle</span>
-                        <h3 class="container-title">Concluídas</h3>
-                        <span class="container-count">1</span>
+                        <span class="material-icons-round container-icon">pending</span>
+                        <h3 class="container-title">Concluida</h3>
+                        <span class="container-count">0</span>
                     </div>
-                    <div class="container-tasks">
-                        <div class="task-card" id="task-1" data-status="completed">
-                            <div class="task-icon task-icon-green">
-                                <span class="material-icons-round">check_circle</span>
-                            </div>
-                            <div class="task-content">
-                                <h3 class="task-title">Estudar Matemática</h3>
-                                <div class="task-meta">
-                                    <span class="task-time">8:00 - 10:00</span>
-                                    <span class="task-separator">▸</span>
-                                    <span class="task-tag tag-blue"></span>
-                                    <span class="task-tag tag-green"></span>
-                                </div>
-                            </div>
-                            <button class="task-arrow">
-                                <span class="material-icons-round">chevron_right</span>
-                            </button>
-                        </div>
-                    </div>
-                </div> -->
+                    <div class="container-tasks" id="done">
 
-                <!-- Container: Finalizadas -->
-                <!-- <div class="task-container container-finished" id="container-finished">
-                    <div class="container-header">
-                        <span class="material-icons-round container-icon">done_all</span>
-                        <h3 class="container-title">Finalizadas</h3>
-                        <span class="container-count">2</span>
                     </div>
-                    <div class="container-tasks">
-                        <div class="task-card" id="task-4" data-status="finished">
-                            <div class="task-icon task-icon-teal">
-                                <span class="material-icons-round">edit_note</span>
-                            </div>
-                            <div class="task-content">
-                                <h3 class="task-title">Escrever parte do TCC</h3>
-                                <div class="task-meta">
-                                    <span class="task-time">16:00 - 18:00</span>
-                                    <span class="task-separator">▸</span>
-                                    <span class="task-tag-icon"><span class="material-icons-round">draw</span></span>
-                                </div>
-                            </div>
-                            <button class="task-arrow">
-                                <span class="material-icons-round">chevron_right</span>
-                            </button>
-                        </div>
-
-                        <div class="task-card" id="task-5" data-status="finished">
-                            <div class="task-icon task-icon-cyan">
-                                <span class="material-icons-round">fitness_center</span>
-                            </div>
-                            <div class="task-content">
-                                <h3 class="task-title">Academia com atlética</h3>
-                                <div class="task-meta">
-                                    <span class="task-time">19:00 - 20:00</span>
-                                    <span class="task-separator">▸</span>
-                                    <span class="task-tag tag-green"></span>
-                                    <span class="task-tag tag-blue-dark"></span>
-                                    <span class="task-tag-icon"><span class="material-icons-round">list</span></span>
-                                </div>
-                            </div>
-                            <button class="task-arrow">
-                                <span class="material-icons-round">chevron_right</span>
-                            </button>
-                        </div>
-                    </div>
-                </div> -->
-
+                </div>
             </div>
 
 

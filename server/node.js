@@ -125,7 +125,7 @@ const requireAuth = (req, res, next) => {
 
     // Example: Verify a simple static Bearer token
     try {
-        var decoded = jwt.verify(authHeader, KEY);
+        jwt.verify(authHeader, KEY);
     } catch (err) {
         return res.status(403).json({ error: 'Invalid token, recieved: ' + authHeader });
     }
@@ -158,22 +158,12 @@ async function getUser(userId) {
 //Função de checar token
 app.get("/api/checkToken", requireAuth, async (req, res) => {
     try {
-        const result = await checkToken();
-        res.send(result);
+        var decoded = jwt.verify(VerificationToken, KEY);
+        res.send(decoded.userName);
     } catch (error) {
-        res.status(500).send("Erro ao executar checkToken");
+        res.status(403).send("Erro ao executar checkToken");
     }
 });
-
-async function checkToken() {
-    try {
-        var decoded = jwt.verify(VerificationToken, KEY);
-        return decoded.userName;
-    } catch (err) {
-        console.error("Erro ao conectar na API:", err.message);
-        return "Falhou o checkToken: " + err.message;
-    }
-}
 
 //Query tasks from user
 app.post("/api/queryTask", requireAuth, async (req, res) => {

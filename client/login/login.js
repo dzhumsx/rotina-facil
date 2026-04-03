@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('login-form');
 
+    localStorage.clear();
+
     if (loginForm) {
         // Se o botão não for do tipo submit, podemos capturar o clique dele também
         const btnLogin = loginForm.querySelector('.btn-login');

@@ -4,10 +4,17 @@
 
 const URL = "http://localhost:3000";
 const KEY = 321;
-const VerificationToken = localStorage.getItem("VerificationToken");
+let VerificationToken = localStorage.getItem("VerificationToken");
 let StoredTasks = [];
 
+// Redireciona imediatamente se não houver token
+if (!VerificationToken) {
+    window.location.href = "./login";
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
+    if (!VerificationToken) return;
+
     //Inicial JWT check & Reassign userName
     try {
         const res = await fetch(URL + "/api/checkToken", {
@@ -15,6 +22,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 'authorization': VerificationToken
             }
         });
+
+        if (res.status === 401 || res.status === 403) {
+            window.location.href = "./login";
+            return;
+        }
+
         const userName = await res.text();
         console.log("Resultado de checkToken():", userName);
 
@@ -22,6 +35,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (userNameDisplay) {
             userNameDisplay.textContent = userName;
         }
+
     } catch (err) {
         console.error("Erro ao conectar na API:", err);
     }
@@ -38,9 +52,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                 jwt: VerificationToken
             })
         });
+
+        if (res.status === 401 || res.status === 403) {
+            window.location.href = "./login";
+            return;
+        }
+
         const tasks = await res.text();
         console.log("Resultado de queryTask():", tasks); //TEST LOG PORPUSE
-        
+
         try {
             StoredTasks = JSON.parse(tasks);
         } catch (e) {
@@ -63,21 +83,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     initSidebarInteractions();
 
     // Link API Test Button to Textarea
-    const btnFetchUser = document.getElementById('btn-fetch-user');
-    const userDataResult = document.getElementById('user-data-result');
-    if (btnFetchUser && userDataResult) {
-        btnFetchUser.addEventListener('click', async () => {
-            userDataResult.value = "Carregando dados do servidor...";
-            const resultData = await getUserData(id);
-            userDataResult.value = resultData;
-        });
-    }
-    const btnCheckToken = document.getElementById('btn-check-token');
-    if (btnCheckToken && userDataResult) {
-        btnCheckToken.addEventListener('click', async () => {
-            userDataResult.value = "Carregando dados do servidor...";
-            const resultData = await checkTokenValid();
-            userDataResult.value = resultData;
+    const btnLogout = document.getElementById('btn-logout');
+    if (btnLogout) {
+        btnLogout.addEventListener('click', async () => {
+            localStorage.removeItem("VerificationToken");
+            window.location.href = "./login";
         });
     }
 
@@ -91,6 +101,12 @@ async function getUserData(userId) {
                 'authorization': VerificationToken
             }
         });
+
+        if (res.status === 401 || res.status === 403) {
+            window.location.href = "./login";
+            return "Sessão expirada";
+        }
+
         const data = await res.text();
         console.log("Resultado de getUser():", data);
         return data; // Retorna o texto formatado para o input
@@ -180,12 +196,18 @@ function renderCalendar() {
 }
 
 function loadTasks(tasks) {
-    const taskContainer = document.querySelector('.container-tasks');
-    if (!taskContainer) return;
-    
+    const pending = document.querySelector('#pending');
+    const doing = document.querySelector('#doing');
+    const done = document.querySelector('#done');
+    if (!pending && !doing && !done) return;
+
     // Clear current loading or default tasks
-    taskContainer.innerHTML = '';
-    
+    doing.innerHTML = '';
+    pending.innerHTML = '';
+    done.innerHTML = '';
+
+
+
     tasks.forEach(task => {
         const taskHTML = `
             <div class="task-card" id="task_${task.id || Math.random().toString(36).substring(2)}" data-status="in-progress">
@@ -203,7 +225,14 @@ function loadTasks(tasks) {
                 </button>
             </div>
         `;
-        taskContainer.insertAdjacentHTML('beforeend', taskHTML);
+
+        if (task.state === 0) {
+            pending.insertAdjacentHTML('beforeend', taskHTML);
+        } else if (task.state === 1) {
+            doing.insertAdjacentHTML('beforeend', taskHTML);
+        } else if (task.state === 2) {
+            done.insertAdjacentHTML('beforeend', taskHTML);
+        }
     });
 }
 

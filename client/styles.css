@@ -699,6 +699,7 @@ body::before {
     overflow: hidden;
     transition: all var(--transition-base);
     border-left: 4px solid transparent;
+    max-height: 400px;
 }
 
 .task-container:hover {
@@ -777,10 +778,12 @@ body::before {
 
 /* Container Tasks */
 .container-tasks {
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 8px;
     overflow: scroll;
+    row-gap: 8px;
+    max-height: 90%;
 }
 
 
