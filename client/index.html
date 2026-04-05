@@ -184,19 +184,6 @@
                 </div>
             </div>
 
-
-            <!-- User Data Test -->
-            <div
-                style="margin: 20px 0; padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background-color: rgba(255,255,255,0.02);">
-                <button id="btn-fetch-user" class="add-task-btn" style="width: auto; margin-bottom: 10px;">
-                    <span class="material-icons-round">cloud_download</span>
-                    Buscar Dados do Usuário
-                </button>
-                <textarea id="user-data-result"
-                    style="width: 100%; height: 80px; padding: 10px; border-radius: 8px; color: #e0e0e0; background: #000; border: 1px solid rgba(255,255,255,0.1); font-family: monospace; resize: none;"
-                    readonly placeholder="O resultado do banco de dados aparecerá aqui..."></textarea>
-            </div>
-
             <!-- Add Task Button -->
             <button class="add-task-btn" id="add-task-btn">
                 <span class="material-icons-round">add</span>
@@ -272,6 +259,34 @@
         </aside>
 
     </main>
+
+    <!-- Modal de Adicionar Tarefa -->
+    <div class="modal-overlay" id="task-modal-overlay">
+        <form class="modal-container" id="task-form">
+            <div class="modal-header">
+                <h2>Adicionar Tarefa</h2>
+                <button type="button" class="modal-close-btn" id="task-modal-close-btn">
+                    <span class="material-icons-round">close</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="task-title-input">Título</label>
+                    <input type="text" id="task-title-input" class="modal-input" placeholder="Digite o título da tarefa"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label for="task-desc-input">Descrição</label>
+                    <textarea id="task-desc-input" class="modal-textarea"
+                        placeholder="Digite a descrição da tarefa"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="modal-btn-cancel" id="task-modal-cancel-btn">Cancelar</button>
+                <button type="submit" class="modal-btn-save" id="task-modal-save-btn">Salvar Tarefa</button>
+            </div>
+        </form>
+    </div>
 
     <script src="script.js"></script>
 </body>

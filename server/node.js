@@ -29,10 +29,10 @@ app.post("/api/register", async (req, res) => {
     }
 
     //Generate Unique ID
-    let id = Math.floor(Math.random() * 9999) + 1;
+    let id = Math.floor(Math.random() * 999999999) + 1;
     checkId = await db.query('SELECT * FROM auth WHERE id = $1', [id]);
     while (checkId.rows[0]) {
-        id = Math.floor(Math.random() * 9999) + 1;
+        id = Math.floor(Math.random() * 999999999) + 1;
         checkId = await db.query('SELECT * FROM auth WHERE id = $1', [id]);
     }
 
@@ -189,6 +189,36 @@ async function queryTasks(userId) {
     }
 }
 
+app.post("/api/createTask", requireAuth, async (req, res) => {
+
+    try {
+        const token = req.body.jwt;
+        const userId = jwt.verify(token, KEY).userId;
+        const { title, description } = req.body;
+        const result = await createTask(userId, title, description);
+        res.status(200).send(result);
+    } catch (err) {
+        console.error("Erro ao conectar na API de task:", err.message);
+        res.status(401).send("Falhou o createTask: " + err.message);
+    }
+
+});
+
+async function createTask(userId, title, description) {
+    try {
+        let id = Math.floor(Math.random() * 999999999) + 1;
+        checkId = await db.query('SELECT * FROM tasks WHERE id = $1', [id]);
+        while (checkId.rows[0]) {
+            id = Math.floor(Math.random() * 999999999) + 1;
+            checkId = await db.query('SELECT * FROM tasks WHERE id = $1', [id]);
+        }
+        const result = await db.query('INSERT INTO tasks (id, userId, title, description) VALUES ($1, $2, $3, $4)', [id, userId, title, description]);
+        return result.rows[0] || "Tarefa criada com sucesso";
+    } catch (err) {
+        console.error("Erro ao conectar na API:", err.message);
+        return "Falhou o createTask: " + err.message;
+    }
+}
 
 
 app.listen(PORT, () => {

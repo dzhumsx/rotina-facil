@@ -81,8 +81,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     initTaskInteractions();
     initChatAssistant();
     initSidebarInteractions();
+    initTaskModal();
 
-    // Link API Test Button to Textarea
+    // Logout button
     const btnLogout = document.getElementById('btn-logout');
     if (btnLogout) {
         btnLogout.addEventListener('click', async () => {
@@ -529,4 +530,141 @@ function initSidebarInteractions() {
             settingsBtn.style.transform = '';
         }, 150);
     });
+}
+
+// ===========================
+// TASK MODAL
+// ===========================
+
+function initTaskModal() {
+    const overlay = document.getElementById('task-modal-overlay');
+    const closeBtn = document.getElementById('task-modal-close-btn');
+    const cancelBtn = document.getElementById('task-modal-cancel-btn');
+    const saveBtn = document.getElementById('task-modal-save-btn');
+    const AddTaskBtns = [
+        document.getElementById('add-task-btn'),
+        document.getElementById('topbar-add-btn')
+    ];
+
+    function openModal() {
+        if (overlay) overlay.classList.add('active');
+    }
+
+    function closeModal() {
+        if (overlay) overlay.classList.remove('active');
+    }
+
+    AddTaskBtns.forEach(btn => {
+        if (btn) {
+            btn.addEventListener('click', openModal);
+        }
+    });
+
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
+
+    // Fechar clicando fora do modal
+    if (overlay) {
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                closeModal();
+            }
+        });
+    }
+
+    const taskForm = document.getElementById('task-form');
+    if (taskForm) {
+        taskForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const titleInput = document.getElementById('task-title-input');
+            const descInput = document.getElementById('task-desc-input');
+
+            const title = titleInput ? titleInput.value.trim() : '';
+            const desc = descInput ? descInput.value.trim() : '';
+
+            if (!title) {
+                alert('Por favor, informe o título da tarefa.');
+                return;
+            }
+
+            console.log('Nova tarefa:', { title, desc });
+
+            // Simulação de adicionar tarefa localmente
+            // A integração com a API ficará para depois, 
+            // mas o formulário já limpará seus dados.
+            createTask(title, desc);
+            if (titleInput) titleInput.value = '';
+            if (descInput) descInput.value = '';
+            closeModal();
+            alert('Tarefa adicionada com sucesso (Simulação)!');
+        });
+    }
+}
+
+async function createTask(title, desc) {
+    try {
+        const res = await fetch(URL + "/api/createTask", {
+            method: 'POST',
+            headers: {
+                'authorization': VerificationToken,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                jwt: VerificationToken,
+                title: title,
+                description: desc
+            })
+        });
+
+        if (res.status === 401 || res.status === 403) {
+            window.location.href = "./login";
+            return;
+        }
+
+        try {
+            StoredTasks = JSON.parse(tasks);
+        } catch (e) {
+            console.log("Failed to parse tasks JSON or no tasks found.");
+            StoredTasks = [];
+        }
+
+        //Fetch tasks
+        try {
+            const res = await fetch(URL + "/api/queryTask", {
+                method: 'POST',
+                headers: {
+                    'authorization': VerificationToken,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    jwt: VerificationToken
+                })
+            });
+
+            if (res.status === 401 || res.status === 403) {
+                window.location.href = "./login";
+                return;
+            }
+
+            const tasks = await res.text();
+            console.log("Resultado de queryTask():", tasks); //TEST LOG PORPUSE
+
+            try {
+                StoredTasks = JSON.parse(tasks);
+            } catch (e) {
+                console.log("Failed to parse tasks JSON or no tasks found.");
+                StoredTasks = [];
+            }
+
+        } catch (err) {
+            console.error("Erro ao conectar na API:", err);
+        }
+
+        if (Array.isArray(StoredTasks)) {
+            loadTasks(StoredTasks);
+        }
+
+    } catch (err) {
+        console.error("Erro ao conectar na API:", err);
+    }
 }
