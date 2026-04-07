@@ -40,7 +40,7 @@ Certain features are visibly present in the layout but their functional implemen
 3. **Frontend Setup:**
    Launch the `client/index.html` file in your browser using any local server (e.g., *Live Server* extension in VS Code) to avoid CORS policy restrictions on local API fetches.
 
-## ☁️ Deployment (Railway VPS)
+## Deployment (Railway VPS)
 
 This project is optimized for deployment using [Railway](https://railway.app/) (Virtual Private Server / PaaS).
 
