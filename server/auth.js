@@ -1,6 +1,5 @@
 require('dotenv').config();
 const express = require("express");
-const cors = require("cors");
 const db = require('./data/db');
 const jwt = require('jsonwebtoken');
 
@@ -9,14 +8,10 @@ const sha512 = require('js-sha512');
 const KEY = btoa(process.env.KEY);
 let VerificationToken = "";
 
-const app = express();
-const PORT = process.env.PORT;
-
-app.use(cors());
-app.use(express.json());
+const router = express.Router();
 
 //Register User
-app.post("/api/register", async (req, res) => {
+router.post("/api/register", async (req, res) => {
     const { nome, user, password } = req.body;
 
     //Check if registered
@@ -40,7 +35,7 @@ app.post("/api/register", async (req, res) => {
 });
 
 //Sing JWT Token
-app.post("/api/getToken", async (req, res) => {
+router.post("/api/getToken", async (req, res) => {
     // Access the header using req.headers
     const authHeader = req.headers['authorization'];
 
@@ -110,6 +105,17 @@ async function generateJWT(userId, userName, user, password) {
     return token;
 }
 
+//Função de checar token
+router.get("/api/checkToken", requireAuth, async (req, res) => {
+    try {
+        var decoded = jwt.verify(req.headers['authorization'], KEY);
+        res.send(decoded.userName);
+    } catch (error) {
+        res.status(403).send("Erro ao executar checkToken");
+    }
+});
+
+
 //Check if token is valid
 const requireAuth = (req, res, next) => {
     // Access the header using req.headers]
@@ -130,34 +136,4 @@ const requireAuth = (req, res, next) => {
     next();
 }
 
-// Create a new route to get a user by ID
-app.get("/api/user/:id", requireAuth, async (req, res) => {
-    try {
-        const result = await getUser(req.params.id);
-        res.send(result);
-    } catch (error) {
-        res.status(500).send("Erro ao executar getUser");
-    }
-});
-
-async function getUser(userId) {
-    try {
-        const result = await db.query('SELECT * FROM users WHERE id = $1', [userId]);
-        return result.rows[0] || "Usuário não encontrado";
-    } catch (err) {
-        console.error("Erro ao conectar na API:", err.message);
-        return "Falhou o getUser: " + err.message;
-    }
-}
-
-
-
-//Função de checar token
-app.get("/api/checkToken", requireAuth, async (req, res) => {
-    try {
-        var decoded = jwt.verify(VerificationToken, KEY);
-        res.send(decoded.userName);
-    } catch (error) {
-        res.status(403).send("Erro ao executar checkToken");
-    }
-});
+module.exports = { requireAuth, router };
