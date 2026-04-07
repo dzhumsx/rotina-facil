@@ -1,6 +1,6 @@
 require('dotenv').config();
 const express = require("express");
-const db = require('./data/db');
+const db = require('./db');
 const jwt = require('jsonwebtoken');
 
 const sha512 = require('js-sha512');
@@ -9,6 +9,26 @@ const KEY = btoa(process.env.KEY);
 let VerificationToken = "";
 
 const router = express.Router();
+
+//Check if token is valid
+const requireAuth = (req, res, next) => {
+    // Access the header using req.headers]
+    const authHeader = req.headers['authorization'];
+
+    // Basic check: Does the header exist?
+    if (!authHeader) {
+        return res.status(401).json({ error: 'Authorization header is missing' });
+    }
+
+    // Example: Verify a simple static Bearer token
+    try {
+        jwt.verify(authHeader, KEY);
+    } catch (err) {
+        return res.status(403).json({ error: 'Invalid token, recieved: ' + authHeader });
+    }
+
+    next();
+}
 
 //Register User
 router.post("/api/register", async (req, res) => {
@@ -105,7 +125,7 @@ async function generateJWT(userId, userName, user, password) {
     return token;
 }
 
-//Função de checar token
+//Função de checar token e retornar Nome do usuário
 router.get("/api/checkToken", requireAuth, async (req, res) => {
     try {
         var decoded = jwt.verify(req.headers['authorization'], KEY);
@@ -116,24 +136,6 @@ router.get("/api/checkToken", requireAuth, async (req, res) => {
 });
 
 
-//Check if token is valid
-const requireAuth = (req, res, next) => {
-    // Access the header using req.headers]
-    const authHeader = req.headers['authorization'];
 
-    // Basic check: Does the header exist?
-    if (!authHeader) {
-        return res.status(401).json({ error: 'Authorization header is missing' });
-    }
-
-    // Example: Verify a simple static Bearer token
-    try {
-        jwt.verify(authHeader, KEY);
-    } catch (err) {
-        return res.status(403).json({ error: 'Invalid token, recieved: ' + authHeader });
-    }
-
-    next();
-}
 
 module.exports = { requireAuth, router };
