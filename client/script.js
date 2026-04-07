@@ -3,7 +3,7 @@
 // ===========================
 
 const URL = "http://localhost:3000";
-const KEY = 321;
+
 let VerificationToken = localStorage.getItem("VerificationToken");
 let StoredTasks = [];
 
