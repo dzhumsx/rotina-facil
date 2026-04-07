@@ -1,6 +1,6 @@
 require('dotenv').config();
 const express = require("express");
-const db = require('./data/db');
+const db = require('./db');
 const jwt = require('jsonwebtoken');
 
 const auth = require('./auth');
