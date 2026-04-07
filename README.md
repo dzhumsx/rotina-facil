@@ -1,4 +1,4 @@
-# Rotina Fácil ✅
+# Rotina Fácil
 
 > **Note:** This is an open-source **Study Project** focused on practicing full-stack web development, interface design, and systems architecture.
 
