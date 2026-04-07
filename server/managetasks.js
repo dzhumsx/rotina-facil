@@ -15,7 +15,6 @@ router.post("/api/queryTask", auth.requireAuth, async (req, res) => {
     try {
         const token = req.body.jwt;
         const userId = jwt.verify(token, KEY).userId;
-        console.log("User ID: " + userId);
         const result = await queryTasks(userId);
         res.status(200).send(result);
     } catch (err) {
@@ -67,7 +66,6 @@ async function createTask(userId, title, description) {
 
 
 router.post("/api/deleteTask", auth.requireAuth, async (req, res) => {
-
     try {
         const token = req.body.jwt;
         const userId = jwt.verify(token, KEY).userId;

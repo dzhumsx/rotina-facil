@@ -1,3 +1,9 @@
+// Mobile Device Block Check
+if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768) {
+    document.documentElement.innerHTML = '<div style="display:flex;height:100vh;align-items:center;justify-content:center;background:#0f172a;color:#fff;text-align:center;padding:20px;font-family:sans-serif;"><div><h1 style="margin-bottom:10px;">Dispositivo não suportado</h1><p>Esta aplicação não possui suporte a dispositivos móveis.<br>Por favor, acesse via computador.</p></div></div>';
+    throw new Error('Acesso bloqueado: dispositivo móvel.');
+}
+
 // ===========================
 // Rotina Fácil - Main Script
 // ===========================

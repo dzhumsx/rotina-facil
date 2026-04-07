@@ -6,7 +6,6 @@ const jwt = require('jsonwebtoken');
 const sha512 = require('js-sha512');
 
 const KEY = btoa(process.env.KEY);
-let VerificationToken = "";
 
 const router = express.Router();
 
@@ -82,7 +81,7 @@ router.post("/api/getToken", async (req, res) => {
     // Salva o token fornecido pelo cliente para uso pelo middleware de autentição requireAuth
     const { user, password } = req.body;
 
-    VerificationToken = await generateJWT(userId, userName, user, password);
+    let VerificationToken = await generateJWT(userId, userName, user, password);
     res.status(200).send(VerificationToken); // Retorna o JWT real para a web!
     console.log("Token JWT gerado e registrado: " + VerificationToken);
 });
