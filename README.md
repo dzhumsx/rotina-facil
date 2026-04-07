@@ -4,23 +4,23 @@
 
 Rotina Fácil is a modern, responsive web application designed for personal routine and task management. It heavily features a visually appealing *Glassmorphism* aesthetic. The project is currently in the Minimum Viable Product (MVP) phase.
 
-## 🚀 Current Features
+## Current Features
 The application supports the following core operations:
 - **Task Management MVP**: Support for Creating, Deleting, and Updating tasks logically integrated with a PostgreSQL backend database.
 - **Authentication Flow**: Secure system featuring User Registration, Login generation, and JWT (JSON Web Tokens) persistence via localStorage.
 - **Protected API Routes**: Backend middleware ensuring requests and task queries are strictly authenticated.
 
-## ⏸️ Paused / Mocked Features
+## Paused / Mocked Features
 Certain features are visibly present in the layout but their functional implementations have been safely paused to maintain focus on the core MVP:
-- 📅 **Calendar Navigation**: The calendar grids and day selections are currently UI interface mockups.
-- 🤖 **AI Assistant Integration**: The chat panel is styled and has mock interactions, but no active LLM backend processing is currently hooked up.
+- **Calendar Navigation**: The calendar grids and day selections are currently UI interface mockups.
+- **AI Assistant Integration**: The chat panel is styled and has mock interactions, but no active LLM backend processing is currently hooked up.
 
-## 💻 Tech Stack
-- **Frontend**: Vanilla HTML5, CSS3, JavaScript. 
-- **Backend**: Node.js, Express.js, Custom Routers (`auth.js` / `managetasks.js`).
-- **Database / Security**: PostgreSQL (`pg`), JSON Web Tokens (`jsonwebtoken`), `js-sha512` for hashing.
+## Tech Stack
+- **Frontend**: HTML, CSS, JavaScript. 
+- **Backend**: Node.js, Express.js
+- **Database / Security**: PostgreSQL, JSON Web Tokens, SHA512 hashing.
 
-## 🛠️ How to run locally
+## How to run locally
 
 1. **Clone the repository and enter the directory:**
    ```bash
