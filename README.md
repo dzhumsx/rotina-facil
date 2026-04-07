@@ -39,3 +39,12 @@ Certain features are visibly present in the layout but their functional implemen
 
 3. **Frontend Setup:**
    Launch the `client/index.html` file in your browser using any local server (e.g., *Live Server* extension in VS Code) to avoid CORS policy restrictions on local API fetches.
+
+## ☁️ Deployment (Railway VPS)
+
+This project is optimized for deployment using [Railway](https://railway.app/) (Virtual Private Server / PaaS).
+
+1. **Database:** Provision a PostgreSQL instance directly on Railway. Extract the provided connection string to use in your server.
+2. **Backend:** Deploy this repository to a Railway service. Railway natively detects the Node.js environment. Ensure the Start Command runs your server (e.g., `cd server && node node.js`).
+3. **Environment Variables:** In the Server's Railway dashboard, input all your required `.env` variables (`PORT`, `KEY`, `TOKEN_GEN_KEY`, and the Postgres database credentials).
+4. **Frontend:** Your frontend can optionally be deployed via Netlify or Vercel, or statically. Make sure to update the `URL` constant inside `client/script.js` from `http://localhost:3000` to your new public Railway domain.
