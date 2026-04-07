@@ -354,7 +354,7 @@ function initTaskInteractions() {
         card.style.opacity = '0';
         card.style.transform = 'translateY(20px)';
         setTimeout(() => {
-            card.style.transition = 'all 0.4s ease';
+            card.style.transition = 'opacity 0.4s ease, transform 0.4s ease'; /* Perf: Removed 'all' */
             card.style.opacity = '1';
             card.style.transform = 'translateY(0)';
         }, 100 + index * 80);
@@ -596,7 +596,6 @@ function initTaskModal() {
             if (titleInput) titleInput.value = '';
             if (descInput) descInput.value = '';
             closeModal();
-            alert('Tarefa adicionada com sucesso (Simulação)!');
         });
     }
 }

@@ -1,4 +1,41 @@
-## Study Project:
-An app that can manage tasks.
+# Rotina Fácil ✅
 
-Currently working in an mvp with the functios of Creating, Deleting and Updating tasks
+> **Note:** This is an open-source **Study Project** focused on practicing full-stack web development, interface design, and systems architecture.
+
+Rotina Fácil is a modern, responsive web application designed for personal routine and task management. It heavily features a visually appealing *Glassmorphism* aesthetic. The project is currently in the Minimum Viable Product (MVP) phase.
+
+## 🚀 Current Features
+The application supports the following core operations:
+- **Task Management MVP**: Support for Creating, Deleting, and Updating tasks logically integrated with a PostgreSQL backend database.
+- **Authentication Flow**: Secure system featuring User Registration, Login generation, and JWT (JSON Web Tokens) persistence via localStorage.
+- **Protected API Routes**: Backend middleware ensuring requests and task queries are strictly authenticated.
+
+## ⏸️ Paused / Mocked Features
+Certain features are visibly present in the layout but their functional implementations have been safely paused to maintain focus on the core MVP:
+- 📅 **Calendar Navigation**: The calendar grids and day selections are currently UI interface mockups.
+- 🤖 **AI Assistant Integration**: The chat panel is styled and has mock interactions, but no active LLM backend processing is currently hooked up.
+
+## 💻 Tech Stack
+- **Frontend**: Vanilla HTML5, CSS3, JavaScript. 
+- **Backend**: Node.js, Express.js, Custom Routers (`auth.js` / `managetasks.js`).
+- **Database / Security**: PostgreSQL (`pg`), JSON Web Tokens (`jsonwebtoken`), `js-sha512` for hashing.
+
+## 🛠️ How to run locally
+
+1. **Clone the repository and enter the directory:**
+   ```bash
+   git clone https://github.com/dzhumsx/rotina-facil.git
+   cd rotina-facil
+   ```
+
+2. **Backend Setup:**
+   Ensure you have a `.env` file inside the `/server` folder containing your environment variables (`PORT`, `KEY` for the JWT, `TOKEN_GEN_KEY` and Postgres Database connection strings).
+   ```bash
+   cd server
+   npm install
+   node node.js
+   ```
+   *The server should run on `localhost:3000`.*
+
+3. **Frontend Setup:**
+   Launch the `client/index.html` file in your browser using any local server (e.g., *Live Server* extension in VS Code) to avoid CORS policy restrictions on local API fetches.
