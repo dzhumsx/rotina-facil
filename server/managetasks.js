@@ -65,4 +65,29 @@ async function createTask(userId, title, description) {
     }
 }
 
+
+router.post("/api/deleteTask", auth.requireAuth, async (req, res) => {
+
+    try {
+        const token = req.body.jwt;
+        const userId = jwt.verify(token, KEY).userId;
+        const { id } = req.body;
+        const result = await deleteTask(userId, id);
+        res.status(200).send(result);
+    } catch (err) {
+        console.error("Erro ao conectar na API de task:", err.message);
+        res.status(401).send("Falhou o createTask: " + err.message);
+    }
+
+});
+
+async function deleteTask(userId, id) {
+    try {
+        const result = await db.query('DELETE FROM tasks WHERE id = $1 AND userId = $2', [id, userId]);
+        return result.rows[0] || "Tarefa deletada com sucesso";
+    } catch (err) {
+        console.error("Erro ao conectar na API:", err.message);
+        return "Falhou o deleteTask: " + err.message;
+    }
+}
 module.exports = { router };
