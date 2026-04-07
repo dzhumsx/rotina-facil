@@ -2,7 +2,7 @@
 
 > **Note:** This is an open-source **Study Project** focused on practicing full-stack web development, interface design, and systems architecture.
 
-Rotina Fácil (Portugues for "Easy Routine") is a simple web application designed for personal routine and task management. It features a *Glassmorphism* aesthetic emulating Apple design language. The project is currently in the Minimum Viable Product (MVP) phase.
+Rotina Fácil (Portuguese for "Easy Routine") is a simple web application designed for personal routine and task management. It features a *Glassmorphism* aesthetic emulating Apple design language. The project is currently in the Minimum Viable Product (MVP) phase.
 
 ## Current Features
 The application supports the following core operations:
