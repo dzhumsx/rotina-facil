@@ -12,6 +12,7 @@ const URL = "http://localhost:3000";
 
 let VerificationToken = localStorage.getItem("VerificationToken");
 let StoredTasks = [];
+let currentTaskId = null;
 
 // Redireciona imediatamente se não houver token
 if (!VerificationToken) {
@@ -46,42 +47,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error("Erro ao conectar na API:", err);
     }
 
-    //Fetch tasks
-    try {
-        const res = await fetch(URL + "/api/queryTask", {
-            method: 'POST',
-            headers: {
-                'authorization': VerificationToken,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                jwt: VerificationToken
-            })
-        });
 
-        if (res.status === 401 || res.status === 403) {
-            window.location.href = "./login";
-            return;
-        }
-
-        const tasks = await res.text();
-        console.log("Resultado de queryTask():", tasks); //TEST LOG PORPUSE
-
-        try {
-            StoredTasks = JSON.parse(tasks);
-        } catch (e) {
-            console.log("Failed to parse tasks JSON or no tasks found.");
-            StoredTasks = [];
-        }
-
-    } catch (err) {
-        console.error("Erro ao conectar na API:", err);
-    }
-
-    if (Array.isArray(StoredTasks)) {
-        loadTasks(StoredTasks);
-    }
-
+    fetchTasks();
     initViewToggle();
     initTaskModal();
     //initCalendar();
@@ -120,6 +87,45 @@ async function getUserData(userId) {
     } catch (err) {
         console.error("Erro ao conectar na API:", err);
         return "Falha na conexão: " + err.message;
+    }
+}
+
+
+//Fetch tasks
+async function fetchTasks() {
+    try {
+        const res = await fetch(URL + "/api/queryTask", {
+            method: 'POST',
+            headers: {
+                'authorization': VerificationToken,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                jwt: VerificationToken
+            })
+        });
+
+        if (res.status === 401 || res.status === 403) {
+            window.location.href = "./login";
+            return;
+        }
+
+        const tasks = await res.text();
+        console.log("Resultado de queryTask():", tasks); //TEST LOG PORPUSE
+
+        try {
+            StoredTasks = JSON.parse(tasks);
+        } catch (e) {
+            console.log("Failed to parse tasks JSON or no tasks found.");
+            StoredTasks = [];
+        }
+
+    } catch (err) {
+        console.error("Erro ao conectar na API:", err);
+    }
+
+    if (Array.isArray(StoredTasks)) {
+        loadTasks(StoredTasks);
     }
 }
 
@@ -605,6 +611,10 @@ function initTaskModal() {
                 if (titleEl && viewTitle) viewTitle.textContent = titleEl.textContent;
                 if (descEl && viewDesc) viewDesc.textContent = descEl.textContent;
 
+                if (card.id && card.id.startsWith("task_")) {
+                    currentTaskId = parseInt(card.id.substring(5), 10);
+                }
+
                 if (viewOverlay) viewOverlay.classList.add('active');
             }
         });
@@ -703,19 +713,9 @@ async function deleteTask(taskId) {
             return;
         }
 
-        const tasks = await res.text();
-        console.log("Resultado de deleteTask():", tasks); //TEST LOG PORPUSE
-
-        try {
-            StoredTasks = JSON.parse(tasks);
-        } catch (e) {
-            console.log("Failed to parse tasks JSON or no tasks found.");
-            StoredTasks = [];
-        }
-
-        if (Array.isArray(StoredTasks)) {
-            loadTasks(StoredTasks);
-        }
+        fetchTasks();
+        const viewOverlay = document.getElementById('view-task-modal-overlay');
+        if (viewOverlay) viewOverlay.classList.remove('active');
 
     } catch (err) {
         console.error("Erro ao conectar na API:", err);
