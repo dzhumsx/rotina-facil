@@ -604,6 +604,45 @@ function initTaskModal() {
             closeModal();
         });
     }
+
+    // Modal de Visualizar Tarefa
+    const viewOverlay = document.getElementById('view-task-modal-overlay');
+    const viewCloseBtn = document.getElementById('view-task-modal-close-btn');
+    const viewOkBtn = document.getElementById('view-task-modal-ok-btn');
+    const viewTitle = document.getElementById('view-task-title');
+    const viewDesc = document.getElementById('view-task-desc');
+
+    function closeViewModal() {
+        if (viewOverlay) viewOverlay.classList.remove('active');
+    }
+
+    if (viewCloseBtn) viewCloseBtn.addEventListener('click', closeViewModal);
+    if (viewOkBtn) viewOkBtn.addEventListener('click', closeViewModal);
+
+    if (viewOverlay) {
+        viewOverlay.addEventListener('click', (e) => {
+            if (e.target === viewOverlay) {
+                closeViewModal();
+            }
+        });
+    }
+
+    // Delegação de eventos para abrir o modal de visualizar tarefa
+    const tasksColumns = document.getElementById('tasks-columns');
+    if (tasksColumns) {
+        tasksColumns.addEventListener('click', (e) => {
+            const card = e.target.closest('.task-card');
+            if (card) {
+                const titleEl = card.querySelector('.task-title');
+                const descEl = card.querySelector('.task-description');
+                
+                if (titleEl && viewTitle) viewTitle.textContent = titleEl.textContent;
+                if (descEl && viewDesc) viewDesc.textContent = descEl.textContent;
+                
+                if (viewOverlay) viewOverlay.classList.add('active');
+            }
+        });
+    }
 }
 
 async function createTask(title, desc) {

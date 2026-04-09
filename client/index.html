@@ -288,6 +288,24 @@
         </form>
     </div>
 
+    <!-- Modal de Visualizar Tarefa -->
+    <div class="modal-overlay" id="view-task-modal-overlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2 id="view-task-title" style="word-break: break-word;">Título da Tarefa</h2>
+                <button type="button" class="modal-close-btn" id="view-task-modal-close-btn">
+                    <span class="material-icons-round">close</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="view-task-desc" style="white-space: pre-wrap; font-size: 1rem; color: var(--text-300); line-height: 1.5;">Descrição da tarefa</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="modal-btn-cancel" id="view-task-modal-ok-btn">Fechar</button>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 
