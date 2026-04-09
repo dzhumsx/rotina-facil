@@ -4,6 +4,8 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
     throw new Error('Acesso bloqueado: dispositivo móvel.');
 }
 
+const TOKEN_KEY = import.meta.env.TOKEN_KEY;
+
 document.addEventListener('DOMContentLoaded', () => {
     const registerForm = document.getElementById('register-form');
 
@@ -36,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const response = await fetch(URL + "/api/register", {
                     method: 'POST',
                     headers: {
-                        'authorization': import.meta.env.TOKEN_KEY,
+                        'authorization': TOKEN_KEY,
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
