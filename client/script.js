@@ -678,3 +678,46 @@ async function createTask(title, desc) {
         console.error("Erro ao conectar na API:", err);
     }
 }
+
+const btnDelete = document.getElementById('view-task-modal-delete-btn');
+btnDelete.addEventListener('click', () => {
+    deleteTask(currentTaskId);
+});
+
+async function deleteTask(taskId) {
+    try {
+        const res = await fetch(URL + "/api/deleteTask", {
+            method: 'POST',
+            headers: {
+                'authorization': VerificationToken,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                jwt: VerificationToken,
+                taskId: taskId
+            })
+        });
+
+        if (res.status === 401 || res.status === 403) {
+            window.location.href = "./login";
+            return;
+        }
+
+        const tasks = await res.text();
+        console.log("Resultado de deleteTask():", tasks); //TEST LOG PORPUSE
+
+        try {
+            StoredTasks = JSON.parse(tasks);
+        } catch (e) {
+            console.log("Failed to parse tasks JSON or no tasks found.");
+            StoredTasks = [];
+        }
+
+        if (Array.isArray(StoredTasks)) {
+            loadTasks(StoredTasks);
+        }
+
+    } catch (err) {
+        console.error("Erro ao conectar na API:", err);
+    }
+}
