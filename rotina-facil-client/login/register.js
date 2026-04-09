@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const response = await fetch(URL + "/api/register", {
                     method: 'POST',
                     headers: {
-                        'authorization': btoa(321),
+                        'authorization': import.meta.env.TOKEN_KEY,
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({

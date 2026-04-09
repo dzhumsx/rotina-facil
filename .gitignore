@@ -8,3 +8,6 @@ node_modules/*
 
 .vite
 .vite/*
+
+.vscode
+.vscode/*
