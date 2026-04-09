@@ -82,12 +82,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         loadTasks(StoredTasks);
     }
 
-    initCalendar();
     initViewToggle();
-    initTaskInteractions();
-    initChatAssistant();
-    initSidebarInteractions();
     initTaskModal();
+    //initCalendar();
+    //initChatAssistant();
+    //initSidebarInteractions();
+
 
     // Logout button
     const btnLogout = document.getElementById('btn-logout');
@@ -121,6 +121,47 @@ async function getUserData(userId) {
         console.error("Erro ao conectar na API:", err);
         return "Falha na conexão: " + err.message;
     }
+}
+
+function loadTasks(tasks) {
+    const pending = document.querySelector('#pending');
+    const doing = document.querySelector('#doing');
+    const done = document.querySelector('#done');
+    if (!pending && !doing && !done) return;
+
+    // Clear current loading or default tasks
+    doing.innerHTML = '';
+    pending.innerHTML = '';
+    done.innerHTML = '';
+
+
+
+    tasks.forEach(task => {
+        const taskHTML = `
+            <div class="task-card" id="task_${task.id || Math.random().toString(36).substring(2)}" data-status="in-progress">
+                <div class="task-icon task-icon-blue">
+                    <span class="material-icons-round">play_circle</span>
+                </div>
+                <div class="task-content">
+                    <h3 class="task-title">${task.title || task.nome || 'Sem título'}</h3>
+                    <div class="task-meta">
+                        <span class="task-description">${task.description || task.descricao || 'Sem descrição'}</span>
+                    </div>
+                </div>
+                <button class="task-arrow">
+                    <span class="material-icons-round">chevron_right</span>
+                </button>
+            </div>
+        `;
+
+        if (task.state === 0) {
+            pending.insertAdjacentHTML('beforeend', taskHTML);
+        } else if (task.state === 1) {
+            doing.insertAdjacentHTML('beforeend', taskHTML);
+        } else if (task.state === 2) {
+            done.insertAdjacentHTML('beforeend', taskHTML);
+        }
+    });
 }
 
 // ===========================
@@ -202,46 +243,6 @@ function renderCalendar() {
     }
 }
 
-function loadTasks(tasks) {
-    const pending = document.querySelector('#pending');
-    const doing = document.querySelector('#doing');
-    const done = document.querySelector('#done');
-    if (!pending && !doing && !done) return;
-
-    // Clear current loading or default tasks
-    doing.innerHTML = '';
-    pending.innerHTML = '';
-    done.innerHTML = '';
-
-
-
-    tasks.forEach(task => {
-        const taskHTML = `
-            <div class="task-card" id="task_${task.id || Math.random().toString(36).substring(2)}" data-status="in-progress">
-                <div class="task-icon task-icon-blue">
-                    <span class="material-icons-round">play_circle</span>
-                </div>
-                <div class="task-content">
-                    <h3 class="task-title">${task.title || task.nome || 'Sem título'}</h3>
-                    <div class="task-meta">
-                        <span class="task-description">${task.description || task.descricao || 'Sem descrição'}</span>
-                    </div>
-                </div>
-                <button class="task-arrow">
-                    <span class="material-icons-round">chevron_right</span>
-                </button>
-            </div>
-        `;
-
-        if (task.state === 0) {
-            pending.insertAdjacentHTML('beforeend', taskHTML);
-        } else if (task.state === 1) {
-            doing.insertAdjacentHTML('beforeend', taskHTML);
-        } else if (task.state === 2) {
-            done.insertAdjacentHTML('beforeend', taskHTML);
-        }
-    });
-}
 
 function createDayButton(day, isOtherMonth, isToday = false) {
     const btn = document.createElement('button');
@@ -348,41 +349,6 @@ function initViewToggle() {
     });
 }
 
-// ===========================
-// TASK INTERACTIONS
-// ===========================
-
-function initTaskInteractions() {
-    // Task card click animation
-    const taskCards = document.querySelectorAll('.task-card');
-    taskCards.forEach((card, index) => {
-        // Staggered entrance animation
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(20px)';
-        setTimeout(() => {
-            card.style.transition = 'opacity 0.4s ease, transform 0.4s ease'; /* Perf: Removed 'all' */
-            card.style.opacity = '1';
-            card.style.transform = 'translateY(0)';
-        }, 100 + index * 80);
-
-        card.addEventListener('click', () => {
-            // Ripple effect
-            card.style.transform = 'scale(0.98)';
-            setTimeout(() => {
-                card.style.transform = 'translateY(-2px)';
-            }, 150);
-        });
-    });
-
-    // Add task button
-    const addTaskBtn = document.getElementById('add-task-btn');
-    addTaskBtn.addEventListener('click', () => {
-        addTaskBtn.style.transform = 'scale(0.95)';
-        setTimeout(() => {
-            addTaskBtn.style.transform = 'translateY(-2px)';
-        }, 150);
-    });
-}
 
 // ===========================
 // CHAT ASSISTANT
@@ -635,10 +601,10 @@ function initTaskModal() {
             if (card) {
                 const titleEl = card.querySelector('.task-title');
                 const descEl = card.querySelector('.task-description');
-                
+
                 if (titleEl && viewTitle) viewTitle.textContent = titleEl.textContent;
                 if (descEl && viewDesc) viewDesc.textContent = descEl.textContent;
-                
+
                 if (viewOverlay) viewOverlay.classList.add('active');
             }
         });
