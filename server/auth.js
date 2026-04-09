@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 const sha512 = require('js-sha512');
 
 const KEY = process.env.KEY;
-const TOKEN_GEN_KEY = process.env.TOKEN_KEY;
+const TOKEN_KEY = process.env.TOKEN_KEY;
 
 const router = express.Router();
 
@@ -65,7 +65,7 @@ router.post("/api/getToken", async (req, res) => {
     }
 
     // Example: Verify a simple static Bearer token
-    if (authHeader !== TOKEN_GEN_KEY) {
+    if (authHeader !== TOKEN_KEY) {
         return res.status(403).json({ error: 'Invalid call' });
     }
 
