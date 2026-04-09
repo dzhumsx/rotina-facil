@@ -42,7 +42,7 @@ Certain features are visibly present in the layout but their functional implemen
 
 ## Deployment (Railway VPS)
 
-This project is optimized for deployment using [Railway](https://railway.app/) (Virtual Private Server / PaaS).
+This project is optimized for deployment using [Railway](https://railway.app/).
 
 1. **Database:** Provision a PostgreSQL instance directly on Railway. Extract the provided connection string to use in your server.
 2. **Backend:** Deploy this repository to a Railway service. Railway natively detects the Node.js environment. Ensure the Root Directory is set to `/server` and the Start Command is set to `node node.js`.

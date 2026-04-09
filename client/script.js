@@ -12,6 +12,7 @@ const URL = "http://localhost:3000";
 
 let VerificationToken = localStorage.getItem("VerificationToken");
 let StoredTasks = [];
+let currentTaskId = null;
 
 // Redireciona imediatamente se não houver token
 if (!VerificationToken) {
@@ -46,7 +47,52 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error("Erro ao conectar na API:", err);
     }
 
-    //Fetch tasks
+
+    fetchTasks();
+    initViewToggle();
+    initTaskModal();
+    //initCalendar();
+    //initChatAssistant();
+    //initSidebarInteractions();
+
+
+    // Logout button
+    const btnLogout = document.getElementById('btn-logout');
+    if (btnLogout) {
+        btnLogout.addEventListener('click', async () => {
+            localStorage.removeItem("VerificationToken");
+            window.location.href = "./login";
+        });
+    }
+
+});
+
+async function getUserData(userId) {
+    try {
+        const res = await fetch(URL + "/api/user/" + userId, {
+            headers: {
+                // Seu token de verificação injetado
+                'authorization': VerificationToken
+            }
+        });
+
+        if (res.status === 401 || res.status === 403) {
+            window.location.href = "./login";
+            return "Sessão expirada";
+        }
+
+        const data = await res.text();
+        console.log("Resultado de getUser():", data);
+        return data; // Retorna o texto formatado para o input
+    } catch (err) {
+        console.error("Erro ao conectar na API:", err);
+        return "Falha na conexão: " + err.message;
+    }
+}
+
+
+//Fetch tasks
+async function fetchTasks() {
     try {
         const res = await fetch(URL + "/api/queryTask", {
             method: 'POST',
@@ -81,46 +127,47 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (Array.isArray(StoredTasks)) {
         loadTasks(StoredTasks);
     }
+}
 
-    initCalendar();
-    initViewToggle();
-    initTaskInteractions();
-    initChatAssistant();
-    initSidebarInteractions();
-    initTaskModal();
+function loadTasks(tasks) {
+    const pending = document.querySelector('#pending');
+    const doing = document.querySelector('#doing');
+    const done = document.querySelector('#done');
+    if (!pending && !doing && !done) return;
 
-    // Logout button
-    const btnLogout = document.getElementById('btn-logout');
-    if (btnLogout) {
-        btnLogout.addEventListener('click', async () => {
-            localStorage.removeItem("VerificationToken");
-            window.location.href = "./login";
-        });
-    }
+    // Clear current loading or default tasks
+    doing.innerHTML = '';
+    pending.innerHTML = '';
+    done.innerHTML = '';
 
-});
 
-async function getUserData(userId) {
-    try {
-        const res = await fetch(URL + "/api/user/" + userId, {
-            headers: {
-                // Seu token de verificação injetado
-                'authorization': VerificationToken
-            }
-        });
 
-        if (res.status === 401 || res.status === 403) {
-            window.location.href = "./login";
-            return "Sessão expirada";
+    tasks.forEach(task => {
+        const taskHTML = `
+            <div class="task-card" id="task_${task.id || Math.random().toString(36).substring(2)}" data-status="in-progress">
+                <div class="task-icon task-icon-blue">
+                    <span class="material-icons-round">play_circle</span>
+                </div>
+                <div class="task-content">
+                    <h3 class="task-title">${task.title || task.nome || 'Sem título'}</h3>
+                    <div class="task-meta">
+                        <span class="task-description">${task.description || task.descricao || 'Sem descrição'}</span>
+                    </div>
+                </div>
+                <button class="task-arrow">
+                    <span class="material-icons-round">chevron_right</span>
+                </button>
+            </div>
+        `;
+
+        if (task.state === 0) {
+            pending.insertAdjacentHTML('beforeend', taskHTML);
+        } else if (task.state === 1) {
+            doing.insertAdjacentHTML('beforeend', taskHTML);
+        } else if (task.state === 2) {
+            done.insertAdjacentHTML('beforeend', taskHTML);
         }
-
-        const data = await res.text();
-        console.log("Resultado de getUser():", data);
-        return data; // Retorna o texto formatado para o input
-    } catch (err) {
-        console.error("Erro ao conectar na API:", err);
-        return "Falha na conexão: " + err.message;
-    }
+    });
 }
 
 // ===========================
@@ -202,46 +249,6 @@ function renderCalendar() {
     }
 }
 
-function loadTasks(tasks) {
-    const pending = document.querySelector('#pending');
-    const doing = document.querySelector('#doing');
-    const done = document.querySelector('#done');
-    if (!pending && !doing && !done) return;
-
-    // Clear current loading or default tasks
-    doing.innerHTML = '';
-    pending.innerHTML = '';
-    done.innerHTML = '';
-
-
-
-    tasks.forEach(task => {
-        const taskHTML = `
-            <div class="task-card" id="task_${task.id || Math.random().toString(36).substring(2)}" data-status="in-progress">
-                <div class="task-icon task-icon-blue">
-                    <span class="material-icons-round">play_circle</span>
-                </div>
-                <div class="task-content">
-                    <h3 class="task-title">${task.title || task.nome || 'Sem título'}</h3>
-                    <div class="task-meta">
-                        <span class="task-description">${task.description || task.descricao || 'Sem descrição'}</span>
-                    </div>
-                </div>
-                <button class="task-arrow">
-                    <span class="material-icons-round">chevron_right</span>
-                </button>
-            </div>
-        `;
-
-        if (task.state === 0) {
-            pending.insertAdjacentHTML('beforeend', taskHTML);
-        } else if (task.state === 1) {
-            doing.insertAdjacentHTML('beforeend', taskHTML);
-        } else if (task.state === 2) {
-            done.insertAdjacentHTML('beforeend', taskHTML);
-        }
-    });
-}
 
 function createDayButton(day, isOtherMonth, isToday = false) {
     const btn = document.createElement('button');
@@ -348,41 +355,6 @@ function initViewToggle() {
     });
 }
 
-// ===========================
-// TASK INTERACTIONS
-// ===========================
-
-function initTaskInteractions() {
-    // Task card click animation
-    const taskCards = document.querySelectorAll('.task-card');
-    taskCards.forEach((card, index) => {
-        // Staggered entrance animation
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(20px)';
-        setTimeout(() => {
-            card.style.transition = 'opacity 0.4s ease, transform 0.4s ease'; /* Perf: Removed 'all' */
-            card.style.opacity = '1';
-            card.style.transform = 'translateY(0)';
-        }, 100 + index * 80);
-
-        card.addEventListener('click', () => {
-            // Ripple effect
-            card.style.transform = 'scale(0.98)';
-            setTimeout(() => {
-                card.style.transform = 'translateY(-2px)';
-            }, 150);
-        });
-    });
-
-    // Add task button
-    const addTaskBtn = document.getElementById('add-task-btn');
-    addTaskBtn.addEventListener('click', () => {
-        addTaskBtn.style.transform = 'scale(0.95)';
-        setTimeout(() => {
-            addTaskBtn.style.transform = 'translateY(-2px)';
-        }, 150);
-    });
-}
 
 // ===========================
 // CHAT ASSISTANT
@@ -604,6 +576,49 @@ function initTaskModal() {
             closeModal();
         });
     }
+
+    // Modal de Visualizar Tarefa
+    const viewOverlay = document.getElementById('view-task-modal-overlay');
+    const viewCloseBtn = document.getElementById('view-task-modal-close-btn');
+    const viewOkBtn = document.getElementById('view-task-modal-ok-btn');
+    const viewTitle = document.getElementById('view-task-title');
+    const viewDesc = document.getElementById('view-task-desc');
+
+    function closeViewModal() {
+        if (viewOverlay) viewOverlay.classList.remove('active');
+    }
+
+    if (viewCloseBtn) viewCloseBtn.addEventListener('click', closeViewModal);
+    if (viewOkBtn) viewOkBtn.addEventListener('click', closeViewModal);
+
+    if (viewOverlay) {
+        viewOverlay.addEventListener('click', (e) => {
+            if (e.target === viewOverlay) {
+                closeViewModal();
+            }
+        });
+    }
+
+    // Delegação de eventos para abrir o modal de visualizar tarefa
+    const tasksColumns = document.getElementById('tasks-columns');
+    if (tasksColumns) {
+        tasksColumns.addEventListener('click', (e) => {
+            const card = e.target.closest('.task-card');
+            if (card) {
+                const titleEl = card.querySelector('.task-title');
+                const descEl = card.querySelector('.task-description');
+
+                if (titleEl && viewTitle) viewTitle.textContent = titleEl.textContent;
+                if (descEl && viewDesc) viewDesc.textContent = descEl.textContent;
+
+                if (card.id && card.id.startsWith("task_")) {
+                    currentTaskId = parseInt(card.id.substring(5), 10);
+                }
+
+                if (viewOverlay) viewOverlay.classList.add('active');
+            }
+        });
+    }
 }
 
 async function createTask(title, desc) {
@@ -668,6 +683,39 @@ async function createTask(title, desc) {
         if (Array.isArray(StoredTasks)) {
             loadTasks(StoredTasks);
         }
+
+    } catch (err) {
+        console.error("Erro ao conectar na API:", err);
+    }
+}
+
+const btnDelete = document.getElementById('view-task-modal-delete-btn');
+btnDelete.addEventListener('click', () => {
+    deleteTask(currentTaskId);
+});
+
+async function deleteTask(taskId) {
+    try {
+        const res = await fetch(URL + "/api/deleteTask", {
+            method: 'POST',
+            headers: {
+                'authorization': VerificationToken,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                jwt: VerificationToken,
+                taskId: taskId
+            })
+        });
+
+        if (res.status === 401 || res.status === 403) {
+            window.location.href = "./login";
+            return;
+        }
+
+        fetchTasks();
+        const viewOverlay = document.getElementById('view-task-modal-overlay');
+        if (viewOverlay) viewOverlay.classList.remove('active');
 
     } catch (err) {
         console.error("Erro ao conectar na API:", err);

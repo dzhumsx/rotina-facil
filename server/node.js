@@ -8,7 +8,11 @@ const tasks = require('./managetasks');
 const app = express();
 const PORT = process.env.PORT;
 
-app.use(cors());
+const corsOptions = {
+    origin: process.env.ALLOWED_ORIGINS.split(',')
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Ativando os webhooks do auth.js

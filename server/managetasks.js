@@ -69,19 +69,19 @@ router.post("/api/deleteTask", auth.requireAuth, async (req, res) => {
     try {
         const token = req.body.jwt;
         const userId = jwt.verify(token, KEY).userId;
-        const { id } = req.body;
-        const result = await deleteTask(userId, id);
+        const taskId = req.body.taskId;
+        const result = await deleteTask(userId, taskId);
         res.status(200).send(result);
     } catch (err) {
         console.error("Erro ao conectar na API de task:", err.message);
-        res.status(401).send("Falhou o createTask: " + err.message);
+        res.status(401).send("Falhou o deleteTask: " + err.message);
     }
 
 });
 
-async function deleteTask(userId, id) {
+async function deleteTask(userId, taskId) {
     try {
-        const result = await db.query('DELETE FROM tasks WHERE id = $1 AND userId = $2', [id, userId]);
+        const result = await db.query('DELETE FROM tasks WHERE id = $1 AND userId = $2', [taskId, userId]);
         return result.rows[0] || "Tarefa deletada com sucesso";
     } catch (err) {
         console.error("Erro ao conectar na API:", err.message);
