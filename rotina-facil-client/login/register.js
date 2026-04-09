@@ -5,68 +5,66 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    const loginForm = document.getElementById('login-form');
+    const registerForm = document.getElementById('register-form');
 
     localStorage.clear();
 
-    if (loginForm) {
+    if (registerForm) {
         // Se o botão não for do tipo submit, podemos capturar o clique dele também
-        const btnLogin = loginForm.querySelector('.btn-login');
+        const btnLogin = registerForm.querySelector('.btn-login');
         if (btnLogin && btnLogin.type === "button") {
             btnLogin.addEventListener('click', () => {
                 // Dispara o evento de submit manualmente ou apenas executa a função
-                loginForm.dispatchEvent(new Event('submit'));
+                registerForm.dispatchEvent(new Event('submit'));
             });
         }
 
-        loginForm.addEventListener('submit', async (e) => {
+        registerForm.addEventListener('submit', async (e) => {
             e.preventDefault(); // Impede o recarregamento da página
 
+            const nome = document.getElementById('name').value;
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
             // Constantes baseadas na estrutura atual do app
-            const URL = "http://localhost:3000";
+            const URL = import.meta.env.VITE_API_URL;
 
             try {
                 // Altera o texto do botão para dar feedback visual
-                if (btnLogin) btnLogin.innerHTML = "<i class='bx bx-loader-alt bx-spin'></i> Entrando...";
+                if (btnLogin) btnLogin.innerHTML = "<i class='bx bx-loader-alt bx-spin'></i> Cadastrando...";
 
-                const response = await fetch(URL + "/api/getToken", {
+                const response = await fetch(URL + "/api/register", {
                     method: 'POST',
                     headers: {
                         'authorization': btoa(321),
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
+                        nome: nome,
                         user: email, // enviando email como usuário
                         password: password
                     })
                 });
 
-                if (response.ok) {
-                    const tokenData = await response.text();
-                    console.log("Token gerado:", tokenData);
-
-                    // Salvar o token no local storage (ou session storage) para uso posterior
-                    localStorage.setItem('VerificationToken', tokenData);
-
-                    // Redireciona para a página principal após o login com sucesso
-                    window.location.href = '../index.html';
+                if (response.status === 200) {
+                    alert(await response.text());
+                    // Redireciona para o login
+                    window.location.href = '/login/index.html';
+                } else if (response.status === 400) {
+                    alert("Usuário já cadastrado");
                 } else {
-                    const errorData = await response.json();
-                    alert("Erro ao fazer login: " + (errorData.error || "Desconhecido"));
-
-                    // Restaura o botão
-                    if (btnLogin) btnLogin.textContent = "Entrar na minha conta";
+                    alert("Erro ao fazer cadastro: " + (await response.text() || "Desconhecido"));
                 }
 
-            } catch (err) {
+                // Restaura o botão
+                if (btnLogin) btnLogin.textContent = "Criar minha conta";
+            }
+            catch (err) {
                 console.error("Erro ao conectar na API:", err);
                 alert("Falha na conexão com o servidor.");
 
                 // Restaura o texto do botão em caso de erro
-                if (btnLogin) btnLogin.textContent = "Entrar na minha conta";
+                if (btnLogin) btnLogin.textContent = "Criar minha conta";
             }
         });
     }
