@@ -24,7 +24,7 @@ const requireAuth = (req, res, next) => {
     try {
         jwt.verify(authHeader, KEY);
     } catch (err) {
-        return res.status(403).json({ error: 'Invalid token, recieved: ' + authHeader });
+        return res.status(403).json({ error: 'Invalid token, recieved: ' });
     }
 
     next();
