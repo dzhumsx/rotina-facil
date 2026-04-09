@@ -65,7 +65,7 @@ router.post("/api/getToken", async (req, res) => {
     }
 
     // Example: Verify a simple static Bearer token
-    if (authHeader !== TOKEN_KEY) {
+    if (authHeader == TOKEN_KEY) {
         return res.status(403).json({ error: 'Invalid call' });
     }
 
