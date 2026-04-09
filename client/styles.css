@@ -110,7 +110,8 @@ body::before {
     background: rgba(255, 255, 255, 0.50);
     border-bottom: 1px solid var(--glass-border);
     z-index: 100;
-    transform: translateZ(0); /* Hardware acceleration for fixed elements */
+    transform: translateZ(0);
+    /* Hardware acceleration for fixed elements */
 }
 
 .topbar-left {
@@ -272,7 +273,8 @@ body::before {
     box-shadow: var(--glass-shadow);
     overflow-y: auto;
     animation: slideInLeft 0.25s ease-out;
-    contain: content; /* CSS Containment for huge performance gain */
+    contain: content;
+    /* CSS Containment for huge performance gain */
     will-change: transform;
 }
 
@@ -1301,8 +1303,13 @@ body::before {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 .modal-container {
@@ -1318,8 +1325,15 @@ body::before {
 }
 
 @keyframes slideUpModal {
-    from { transform: translateY(20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 .modal-header {
@@ -1369,7 +1383,8 @@ body::before {
     color: var(--gray-700);
 }
 
-.modal-input, .modal-textarea {
+.modal-input,
+.modal-textarea {
     width: 100%;
     background: rgba(255, 255, 255, 0.5);
     border: 1px solid var(--gray-200);
@@ -1382,7 +1397,8 @@ body::before {
     transition: border-color var(--transition-fast);
 }
 
-.modal-input:focus, .modal-textarea:focus {
+.modal-input:focus,
+.modal-textarea:focus {
     border-color: var(--primary-400);
     background: rgba(255, 255, 255, 0.8);
 }
@@ -1398,7 +1414,9 @@ body::before {
     gap: 12px;
 }
 
-.modal-btn-cancel, .modal-btn-save {
+.modal-btn-cancel,
+.modal-btn-save,
+.modal-btn-delete {
     padding: 10px 18px;
     border-radius: var(--radius-md);
     font-family: var(--font-family);
@@ -1413,6 +1431,14 @@ body::before {
     border: 1px solid var(--gray-300);
     color: var(--gray-600);
 }
+
+
+.modal-btn-delete {
+    background: rgb(223, 31, 31);
+    border: 1px solid var(--gray-300);
+    color: var(--white);
+}
+
 
 .modal-btn-cancel:hover {
     background: var(--gray-100);
