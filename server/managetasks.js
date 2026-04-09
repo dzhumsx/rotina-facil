@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 
 const auth = require('./auth');
 
-const KEY = btoa(process.env.KEY);
+const KEY = process.env.KEY;
 
 const router = express.Router();
 

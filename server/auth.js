@@ -5,8 +5,8 @@ const jwt = require('jsonwebtoken');
 
 const sha512 = require('js-sha512');
 
-const KEY = btoa(process.env.KEY);
-const TOKEN_GEN_KEY = btoa(process.env.TOKEN_KEY)
+const KEY = process.env.KEY;
+const TOKEN_GEN_KEY = process.env.TOKEN_KEY;
 
 const router = express.Router();
 
