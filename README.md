@@ -16,7 +16,7 @@ Certain features are visibly present in the layout but their functional implemen
 - **AI Assistant Integration**: The chat panel is styled and has mock interactions, but no active LLM backend processing is currently hooked up.
 
 ## Tech Stack
-- **Frontend**: HTML, CSS, JavaScript. 
+- **Frontend**: Vite.js, HTML, CSS, JavaScript. 
 - **Backend**: Node.js, Express.js
 - **Database / Security**: PostgreSQL, JSON Web Tokens, SHA512 hashing.
 
@@ -38,7 +38,12 @@ Certain features are visibly present in the layout but their functional implemen
    *The server should run on `localhost:3000`.*
 
 3. **Frontend Setup:**
-   Launch the `client/index.html` file in your browser using any local server (e.g., *Live Server* extension in VS Code) to avoid CORS policy restrictions on local API fetches.
+   Navigate into the `/rotina-facil-client` directory, install the dependencies, and start the Vite development server. Make sure you have created an `.env` file inside the root of the client folder containing `VITE_API_URL=http://localhost:3000`.
+   ```bash
+   cd rotina-facil-client
+   npm install
+   npm run dev
+   ```
 
 ## Deployment (Railway VPS)
 
@@ -47,4 +52,4 @@ This project is optimized for deployment using [Railway](https://railway.app/).
 1. **Database:** Provision a PostgreSQL instance directly on Railway. Extract the provided connection string to use in your server.
 2. **Backend:** Deploy this repository to a Railway service. Railway natively detects the Node.js environment. Ensure the Root Directory is set to `/server` and the Start Command is set to `node node.js`.
 3. **Environment Variables:** In the Server's Railway dashboard, input all your required `.env` variables (`PORT`, `KEY`, `TOKEN_GEN_KEY`, and the Postgres database credentials).
-4. **Frontend:** Your frontend can optionally be deployed via Netlify or Vercel, or statically. Make sure to update the `URL` constant inside `client/script.js` from `http://localhost:3000` to your new public Railway domain.
+4. **Frontend:** Your frontend can optionally be deployed via Netlify or Vercel. Make sure to set the `VITE_API_URL` environment variable containing your new public Railway domain in your hosting platform, which will be injected during the production build (`npm run build`).

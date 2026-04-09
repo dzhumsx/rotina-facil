@@ -8,7 +8,7 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
 // Rotina Fácil - Main Script
 // ===========================
 
-const URL = "http://localhost:3000";
+const URL = import.meta.env.VITE_API_URL;
 
 let VerificationToken = localStorage.getItem("VerificationToken");
 let StoredTasks = [];
@@ -16,7 +16,7 @@ let currentTaskId = null;
 
 // Redireciona imediatamente se não houver token
 if (!VerificationToken) {
-    window.location.href = "./login";
+    window.location.href = "/login/index.html";
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
 
         if (res.status === 401 || res.status === 403) {
-            window.location.href = "./login";
+            window.location.href = "/login/index.html";
             return;
         }
 
@@ -61,35 +61,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (btnLogout) {
         btnLogout.addEventListener('click', async () => {
             localStorage.removeItem("VerificationToken");
-            window.location.href = "./login";
+            window.location.href = "/login/index.html";
         });
     }
 
 });
-
-async function getUserData(userId) {
-    try {
-        const res = await fetch(URL + "/api/user/" + userId, {
-            headers: {
-                // Seu token de verificação injetado
-                'authorization': VerificationToken
-            }
-        });
-
-        if (res.status === 401 || res.status === 403) {
-            window.location.href = "./login";
-            return "Sessão expirada";
-        }
-
-        const data = await res.text();
-        console.log("Resultado de getUser():", data);
-        return data; // Retorna o texto formatado para o input
-    } catch (err) {
-        console.error("Erro ao conectar na API:", err);
-        return "Falha na conexão: " + err.message;
-    }
-}
-
 
 //Fetch tasks
 async function fetchTasks() {
@@ -106,7 +82,7 @@ async function fetchTasks() {
         });
 
         if (res.status === 401 || res.status === 403) {
-            window.location.href = "./login";
+            window.location.href = "/login/index.html";
             return;
         }
 
@@ -637,52 +613,11 @@ async function createTask(title, desc) {
         });
 
         if (res.status === 401 || res.status === 403) {
-            window.location.href = "./login";
+            window.location.href = "/login/index.html";
             return;
         }
 
-        try {
-            StoredTasks = JSON.parse(tasks);
-        } catch (e) {
-            console.log("Failed to parse tasks JSON or no tasks found.");
-            StoredTasks = [];
-        }
-
-        //Fetch tasks
-        try {
-            const res = await fetch(URL + "/api/queryTask", {
-                method: 'POST',
-                headers: {
-                    'authorization': VerificationToken,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    jwt: VerificationToken
-                })
-            });
-
-            if (res.status === 401 || res.status === 403) {
-                window.location.href = "./login";
-                return;
-            }
-
-            const tasks = await res.text();
-            console.log("Resultado de queryTask():", tasks); //TEST LOG PORPUSE
-
-            try {
-                StoredTasks = JSON.parse(tasks);
-            } catch (e) {
-                console.log("Failed to parse tasks JSON or no tasks found.");
-                StoredTasks = [];
-            }
-
-        } catch (err) {
-            console.error("Erro ao conectar na API:", err);
-        }
-
-        if (Array.isArray(StoredTasks)) {
-            loadTasks(StoredTasks);
-        }
+        fetchTasks();
 
     } catch (err) {
         console.error("Erro ao conectar na API:", err);
@@ -709,7 +644,7 @@ async function deleteTask(taskId) {
         });
 
         if (res.status === 401 || res.status === 403) {
-            window.location.href = "./login";
+            window.location.href = "/login/index.html";
             return;
         }
 
