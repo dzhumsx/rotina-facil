@@ -4,7 +4,7 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
     throw new Error('Acesso bloqueado: dispositivo móvel.');
 }
 
-const TOKEN_KEY = import.meta.env.TOKEN_KEY;
+const TOKEN_KEY = import.meta.env.VITE_TOKEN_KEY;
 
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('login-form');
